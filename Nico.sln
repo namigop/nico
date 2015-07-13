@@ -7,6 +7,12 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Nico", "Nico\Nico.fsproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MahApps.Metro.Resources", "MahApps.Metro.Resources\MahApps.Metro.Resources.csproj", "{E708AC99-605B-42A0-8D20-ABCA8FE42DD2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MonoTorrent", "MonoTorrent", "{4582537C-1C06-47BF-975E-FDF26B4071F5}"
+	ProjectSection(SolutionItems) = preProject
+		MonoTorrent\MonoTorrent.Dht.dll = MonoTorrent\MonoTorrent.Dht.dll
+		MonoTorrent\MonoTorrent.dll = MonoTorrent\MonoTorrent.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

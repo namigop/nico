@@ -84,16 +84,8 @@ type MainWindowViewModel() as this =
         //Add mgr to list
         allTorrentManagers.Add(mgr)
 
-    let loadedCommand =     
-        let task = Task.Run( new Action(fun () ->
-                Thread.Sleep(1000)
-                let items = 
-                    Directory.GetFiles(pathValues.TorrentsPath, "*.torrent", SearchOption.TopDirectoryOnly) 
-                    |> Seq.map (fun torrentFile ->
-                            torrentFile
-                            |> TorrentClient.createTorrentManager allSettings.TorrentDefault pathValues)
-                items))
-        let mgr = task.re
+    let loadedCommand =     ()
+
 //        let items = Directory.GetFiles(pathValues.TorrentsPath, "*.torrent", SearchOption.TopDirectoryOnly) 
 //                    |> Seq.map (fun torrentFile ->
 //                                torrentFile

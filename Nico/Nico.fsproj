@@ -100,8 +100,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="MonoTorrent">
-      <HintPath>..\packages\MonoTorrent.0.9.0\lib\net20\MonoTorrent.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\MonoTorrent\MonoTorrent.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoTorrent.Dht">
+      <HintPath>..\MonoTorrent\MonoTorrent.Dht.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
