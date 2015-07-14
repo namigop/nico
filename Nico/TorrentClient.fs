@@ -10,7 +10,7 @@ open MonoTorrent.Client.Tracker
 open MonoTorrent.Common
 open MonoTorrent.Dht
 open MonoTorrent.Dht.Listeners
-open InfoHashExtension
+open NicoExtensions
  
 
 module TorrentClient =

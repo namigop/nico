@@ -1,4 +1,4 @@
-﻿module InfoHashExtension 
+﻿module NicoExtensions
     
     open MonoTorrent
     open MonoTorrent.BEncoding

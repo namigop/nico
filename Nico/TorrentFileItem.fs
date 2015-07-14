@@ -1,6 +1,6 @@
 ﻿namespace Nico
 
-open InfoHashExtension
+open NicoExtensions
 open MonoTorrent.BEncoding
 open MonoTorrent.Client
 open MonoTorrent.Client.Encryption
@@ -17,12 +17,8 @@ type TorrentFileItem(torFile : TorrentFile, downloadPath) =
     let mutable progress = 0.0
     let mutable fileName = torFile.Path
 
-    let image =
-        if File.Exists(torFile.FullPath) then
-            Utils.GetIcon torFile.FullPath
-        else
-            null
-    
+    let image = Utils.GetIcon torFile.FullPath
+      
     member this.Image = image
     member this.UpdateProgress() =
         this.Progress <- Math.Round(torFile.BitField.PercentComplete,2)

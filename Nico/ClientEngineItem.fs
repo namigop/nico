@@ -2,7 +2,7 @@
 
 open System
 open System.Windows.Threading
-open InfoHashExtension
+open NicoExtensions
 open MonoTorrent.BEncoding
 open MonoTorrent.Client
 open MonoTorrent.Client.Encryption

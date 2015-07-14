@@ -13,540 +13,545 @@
     GlowBrush="{DynamicResource AccentColorBrush}"
     FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
 
-  <Window.DataContext>
-    <viewmodels:MainWindowViewModel />
-  </Window.DataContext>
-  <i:Interaction.Triggers>
-    <i:EventTrigger EventName="Loaded">
-        <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
-    </i:EventTrigger>
-</i:Interaction.Triggers>
-  <Window.Resources>
-    <Style x:Key="Foo" TargetType="ToggleButton">
-      <Setter Property="Padding" Value="3" />
-      <Setter Property="Template">
-        <Setter.Value>
-          <ControlTemplate TargetType="ToggleButton">
-            <Grid>
+    <Window.DataContext>
+        <viewmodels:MainWindowViewModel />
+    </Window.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Window.Resources>
+        <Style x:Key="Foo" TargetType="ToggleButton">
+            <Setter Property="Padding" Value="3" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid>
 
-              <ContentPresenter x:Name="contentPresenter"
+                            <ContentPresenter x:Name="contentPresenter"
                                 Margin="{TemplateBinding Padding}"
                                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                 VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                 Content="{TemplateBinding Content}"
                                 ContentTemplate="{TemplateBinding ContentTemplate}" />
-              <Path x:Name="DefaultPath"
+                            <Path x:Name="DefaultPath"
                     VerticalAlignment="Top"
                     Data="M0,0 14,7 0,14 Z"
                     Fill="Gray"
                     Stretch="Fill" />
-              <Path x:Name="CheckedPath"
+                            <Path x:Name="CheckedPath"
                     VerticalAlignment="Top"
                     Data="M0,0 14,0 7,14 Z"
                     Fill="LightGray"
                     Stretch="Fill"
                     Visibility="Collapsed" />
-            </Grid>
-          </ControlTemplate>
-        </Setter.Value>
-      </Setter>
-    </Style>
-  </Window.Resources>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
-      <RowDefinition Height="Auto" />
-    </Grid.RowDefinitions>
-    <Border BorderThickness="0"  BorderBrush="Gray">
-      <ToolBarPanel>
-        <Grid>
-          <ToolBar>
-            <Button Command="{Binding AddTorrentCommand}" Margin="5">
-              <StackPanel Orientation="Horizontal">
-                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
-                  <Rectangle.OpacityMask>
-                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_add}" />
-                  </Rectangle.OpacityMask>
-                </Rectangle>
-                <!--<TextBlock Text=" TORRENT" VerticalAlignment="Center" />-->
-              </StackPanel>
-            </Button>
-            <Button Margin="5">
-              <StackPanel Orientation="Horizontal">
-                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
-                  <Rectangle.OpacityMask>
-                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_list_delete}" />
-                  </Rectangle.OpacityMask>
-                </Rectangle>
-                <!--<TextBlock Text=" TORRENT" VerticalAlignment="Center" />-->
-              </StackPanel>
-            </Button>
-            <Separator />
-            <Button Margin="5">
-              <StackPanel Orientation="Horizontal">
-                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
-                  <Rectangle.OpacityMask>
-                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_pause}" />
-                  </Rectangle.OpacityMask>
-                </Rectangle>
-                <!--<TextBlock Text=" PAUSE" VerticalAlignment="Center" />-->
-              </StackPanel>
-            </Button>
-            <Button Margin="5">
-              <StackPanel Orientation="Horizontal">
-                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
-                  <Rectangle.OpacityMask>
-                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_resume}" />
-                  </Rectangle.OpacityMask>
-                </Rectangle>
-                <!--<TextBlock Text=" RESUME" VerticalAlignment="Center" />-->
-              </StackPanel>
-            </Button>
-            <Separator />
-            <Button Margin="5">
-              <StackPanel Orientation="Horizontal">
-                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
-                  <Rectangle.OpacityMask>
-                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_arrow_up}" />
-                  </Rectangle.OpacityMask>
-                </Rectangle>
-                <!--<TextBlock Text=" MOVE UP" VerticalAlignment="Center" />-->
-              </StackPanel>
-            </Button>
-            <Button Margin="5">
-              <StackPanel Orientation="Horizontal">
-                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
-                  <Rectangle.OpacityMask>
-                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_arrow_down}" />
-                  </Rectangle.OpacityMask>
-                </Rectangle>
-                <!--<TextBlock Text=" MOVE DOWN" VerticalAlignment="Center" />-->
-              </StackPanel>
-            </Button>
-            <Separator />
-            <Button Margin="5">
-              <StackPanel Orientation="Horizontal">
-                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
-                  <Rectangle.OpacityMask>
-                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_cog}" />
-                  </Rectangle.OpacityMask>
-                </Rectangle>
-                <!--<TextBlock Text=" CONFIG" VerticalAlignment="Center" />-->
-              </StackPanel>
-            </Button>
-          </ToolBar>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="2">
-                    <StackPanel.Resources>
-                      <Style TargetType="RadioButton" BasedOn="{StaticResource NicoRadioButton}">
-                        <Setter Property="FontWeight" Value="Normal" />
-                        <Setter Property="FontSize" Value="15" />
-                        <Setter Property="Margin" Value="5" />
-                      </Style>
-                      <Style TargetType="Rectangle">
-                        <Setter Property="Margin" Value="0,0,5,0" />
-                        <Setter Property="Fill" Value="{DynamicResource AccentColorBrush}" />
-                      </Style>
-                    </StackPanel.Resources>
-                    <RadioButton  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectAllTorrentsCommand}" IsChecked="True">
-                      <Grid Margin="5"   Width="90">
-                        <!--<Rectangle Width="18" Height="20">
-                          <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_multiple}" />
-                          </Rectangle.OpacityMask>
-                        </Rectangle>-->
-                        <TextBlock Text="{Binding AllTorrentsHeader}" HorizontalAlignment="Center" />
-                      </Grid>
-                    </RadioButton>
-                        <RadioButton  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectActiveTorrentsCommand}">
-                      <Grid  Margin="5" Width="100">
-                        <!--<Rectangle Width="18" Height="18">
-                          <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_people}" />
-                          </Rectangle.OpacityMask>
-                        </Rectangle>-->
-                        <TextBlock Text="{Binding DownloadingTorrentsHeader}" HorizontalAlignment="Center"/>
-                      </Grid>
-                    </RadioButton>
-                        <RadioButton  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectSeedingTorrentsCommand}">
-                      <Grid  Margin="5" Width="90">
-                        <!--<Rectangle Width="18" Height="18">
-                          <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_people}" />
-                          </Rectangle.OpacityMask>
-                        </Rectangle>-->
-                        <TextBlock Text="{Binding SeedingTorrentsHeader}" HorizontalAlignment="Center"/>
-                      </Grid>
-                    </RadioButton>
-                        <RadioButton VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectPausedTorrentsCommand}">
-                      <Grid  Margin="5" Width="90">
-                        <!--<Rectangle Width="18" Height="18">
-                          <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_list}" />
-                          </Rectangle.OpacityMask>
-                        </Rectangle>-->
-                        <TextBlock Text="{Binding PausedTorrentsHeader}" HorizontalAlignment="Center" />
-                      </Grid>
-                    </RadioButton>
-                  </StackPanel>
-          
-        </Grid>
-      </ToolBarPanel>
-    </Border>
-
-    <Grid Grid.Row="1">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="Auto" />
-        <ColumnDefinition Width="Auto" />
-        <ColumnDefinition Width="*" />
-      </Grid.ColumnDefinitions>
-      <StackPanel Visibility="Collapsed">
-        <TextBlock Text="States" Width="200" />
-        <ListView Grid.Column="0" />
-      </StackPanel>
-
-      <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="Collapsed" />
-      <Grid Grid.Column="2">
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
         <Grid.RowDefinitions>
-          <RowDefinition Height="Auto" />
-          <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-       
-        <DataGrid Grid.Row="1" ItemsSource="{Binding TorrentManagers}" AutoGenerateColumns="False" x:Name="grid">
-          <i:Interaction.Triggers>
-            <i:EventTrigger EventName="MouseDoubleClick">
-              <i:InvokeCommandAction Command="{Binding RowClickCommand}" CommandParameter="{Binding ElementName=grid}" />
-            </i:EventTrigger>
-          </i:Interaction.Triggers>
-          <!-- Columns -->
-          <DataGrid.Columns>
-            <DataGridTemplateColumn Header=""  IsReadOnly="True" Width="5">
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                  <!--<ToggleButton Style="{StaticResource Foo}" />-->
-                  <Border />
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTemplateColumn Header="Name"  IsReadOnly="True" Width="Auto">
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                  <TextBlock Text="{Binding Name}" FontSize="13" />
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTemplateColumn Header="State"  IsReadOnly="True">
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                  <Grid>
-                    <TextBlock Text="{Binding OverallStatus}" HorizontalAlignment="Center" FontSize="10" />
-                  </Grid>
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTemplateColumn Header="Progress"  IsReadOnly="True">
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                  <Grid>
-                    <ProgressBar Value="{Binding Progress}" IsIndeterminate="false" Height="15" ToolTip="{Binding Progress}" />
-                    <TextBlock Text="{Binding Progress, StringFormat={}{0}% }" HorizontalAlignment="Center" FontSize="10" />
-                  </Grid>
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTemplateColumn Header="Download speed"  IsReadOnly="True">
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                  <TextBlock Text="{Binding DownloadSpeed}" HorizontalAlignment="Center" />
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTemplateColumn Header="Upload speed"  IsReadOnly="True">
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                  <TextBlock Text="{Binding UploadSpeed}" HorizontalAlignment="Center" />
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTemplateColumn Header="Ratio"  IsReadOnly="True">
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                  <TextBlock Text="{Binding Ratio}" HorizontalAlignment="Center" />
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTemplateColumn Header=""  IsReadOnly="True" Width="*">
-              <DataGridTemplateColumn.CellTemplate>
-                <DataTemplate>
-                  <Border />
-                </DataTemplate>
-              </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-          </DataGrid.Columns>
-
-          <!--Row Style-->
-          <DataGrid.RowStyle>
-            <Style TargetType="{x:Type DataGridRow}">
-              <Setter Property="DetailsVisibility" Value="Collapsed" />
-              <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                  <Setter Property="Background" Value="{DynamicResource AccentColorBrush4}" />
-                </Trigger>
-                <Trigger Property="IsSelected" Value="True">
-                  <Trigger.EnterActions>
-                    <BeginStoryboard>
-                      <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="DetailsVisibility">
-                          <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
-                        </ObjectAnimationUsingKeyFrames>
-                      </Storyboard>
-                    </BeginStoryboard>
-                  </Trigger.EnterActions>
-                  <Trigger.ExitActions>
-                    <BeginStoryboard>
-                      <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="DetailsVisibility">
-                          <DiscreteObjectKeyFrame KeyTime="0:0:0.4"  Value="{x:Static Visibility.Collapsed}" />
-                        </ObjectAnimationUsingKeyFrames>
-                      </Storyboard>
-                    </BeginStoryboard>
-                  </Trigger.ExitActions>
-                </Trigger>
-              </Style.Triggers>
-            </Style>
-          </DataGrid.RowStyle>
-
-          <!--RowDetails Template-->
-          <DataGrid.RowDetailsTemplate>
-            <DataTemplate>
-              <Grid Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=ActualWidth}" MaxHeight="300">
-                <Grid.LayoutTransform>
-                  <ScaleTransform ScaleY="0" />
-                </Grid.LayoutTransform>
-                <Grid.Style>
-                  <Style TargetType="Grid">
-                    <Style.Triggers>
-                      <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}"
-                                   Value="True">
-                        <DataTrigger.EnterActions>
-                          <BeginStoryboard>
-                            <Storyboard>
-                              <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="LayoutTransform.ScaleY">
-                                <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1">
-                                  <EasingDoubleKeyFrame.EasingFunction>
-                                    <CubicEase EasingMode="EaseInOut" />
-                                  </EasingDoubleKeyFrame.EasingFunction>
-                                </EasingDoubleKeyFrame>
-                              </DoubleAnimationUsingKeyFrames>
-                            </Storyboard>
-                          </BeginStoryboard>
-                        </DataTrigger.EnterActions>
-                        <DataTrigger.ExitActions>
-                          <BeginStoryboard>
-                            <Storyboard>
-                              <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="LayoutTransform.ScaleY">
-                                <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="0">
-                                  <EasingDoubleKeyFrame.EasingFunction>
-                                    <CubicEase EasingMode="EaseInOut" />
-                                  </EasingDoubleKeyFrame.EasingFunction>
-                                </EasingDoubleKeyFrame>
-                              </DoubleAnimationUsingKeyFrames>
-                            </Storyboard>
-                          </BeginStoryboard>
-                        </DataTrigger.ExitActions>
-                      </DataTrigger>
-                    </Style.Triggers>
-                  </Style>
-                </Grid.Style>
-                <Grid.RowDefinitions>
-                  <RowDefinition Height="Auto" />
-                  <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Grid Background="White">
-                  <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="2">
-                    <StackPanel.Resources>
-                      <Style TargetType="RadioButton" BasedOn="{StaticResource NicoRadioButton}">
-                        <Setter Property="FontWeight" Value="Normal" />
-                        <Setter Property="FontSize" Value="14" />
-                        <Setter Property="Margin" Value="5" />
-                      </Style>
-                      <Style TargetType="Rectangle">
-                        <Setter Property="Margin" Value="0,0,5,0" />
-                        <Setter Property="Fill" Value="{DynamicResource AccentColorBrush}" />
-                      </Style>
-                    </StackPanel.Resources>
-                    <RadioButton  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectFilesCommand}" IsChecked="True">
-                      <StackPanel Margin="5" Orientation="Horizontal" VerticalAlignment="Center" Width="90">
-                        <Rectangle Width="18" Height="20">
+        <Border BorderThickness="0"  BorderBrush="Gray">
+            <ToolBarPanel>
+                <Grid>
+                    <ToolBar>
+                        <Button Command="{Binding AddTorrentCommand}" Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_add}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <!--<TextBlock Text=" TORRENT" VerticalAlignment="Center" />-->
+                            </StackPanel>
+                        </Button>
+                        <Button Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_list_delete}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <!--<TextBlock Text=" TORRENT" VerticalAlignment="Center" />-->
+                            </StackPanel>
+                        </Button>
+                        <Separator />
+                        <Button Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_pause}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <!--<TextBlock Text=" PAUSE" VerticalAlignment="Center" />-->
+                            </StackPanel>
+                        </Button>
+                        <Button Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_resume}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <!--<TextBlock Text=" RESUME" VerticalAlignment="Center" />-->
+                            </StackPanel>
+                        </Button>
+                        <Separator />
+                        <Button Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_arrow_up}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <!--<TextBlock Text=" MOVE UP" VerticalAlignment="Center" />-->
+                            </StackPanel>
+                        </Button>
+                        <Button Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_arrow_down}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <!--<TextBlock Text=" MOVE DOWN" VerticalAlignment="Center" />-->
+                            </StackPanel>
+                        </Button>
+                        <Separator />
+                        <Button Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_cog}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <!--<TextBlock Text=" CONFIG" VerticalAlignment="Center" />-->
+                            </StackPanel>
+                        </Button>
+                    </ToolBar>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="2">
+                        <StackPanel.Resources>
+                            <Style TargetType="RadioButton" BasedOn="{StaticResource NicoRadioButton}">
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                                <Setter Property="FontSize" Value="15" />
+                                <Setter Property="Margin" Value="5" />
+                            </Style>
+                            <Style TargetType="Rectangle">
+                                <Setter Property="Margin" Value="0,0,5,0" />
+                                <Setter Property="Fill" Value="{DynamicResource AccentColorBrush}" />
+                            </Style>
+                        </StackPanel.Resources>
+                        <RadioButton  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectAllTorrentsCommand}" IsChecked="True">
+                            <Grid Margin="5"   Width="90">
+                                <!--<Rectangle Width="18" Height="20">
                           <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_multiple}" />
                           </Rectangle.OpacityMask>
-                        </Rectangle>
-                        <TextBlock Text="{Binding FilesHeader}" />
-                      </StackPanel>
-                    </RadioButton>
-                    <RadioButton  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectPeersCommand}">
-                      <StackPanel  Margin="5" Orientation="Horizontal" VerticalAlignment="Center" Width="90">
-                        <Rectangle Width="18" Height="18">
+                        </Rectangle>-->
+                                <TextBlock Text="{Binding AllTorrentsHeader}" HorizontalAlignment="Center" />
+                            </Grid>
+                        </RadioButton>
+                        <RadioButton  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectActiveTorrentsCommand}">
+                            <Grid  Margin="5" Width="100">
+                                <!--<Rectangle Width="18" Height="18">
                           <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_people}" />
                           </Rectangle.OpacityMask>
-                        </Rectangle>
-                        <TextBlock Text="{Binding PeersHeader}" />
-                      </StackPanel>
-                    </RadioButton>
-                    <RadioButton VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectDetailsCommand}">
-                      <StackPanel  Margin="5" Orientation="Horizontal" VerticalAlignment="Center" Width="90">
-                        <Rectangle Width="18" Height="18">
+                        </Rectangle>-->
+                                <TextBlock Text="{Binding DownloadingTorrentsHeader}" HorizontalAlignment="Center" />
+                            </Grid>
+                        </RadioButton>
+                        <RadioButton  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectSeedingTorrentsCommand}">
+                            <Grid  Margin="5" Width="90">
+                                <!--<Rectangle Width="18" Height="18">
+                          <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_people}" />
+                          </Rectangle.OpacityMask>
+                        </Rectangle>-->
+                                <TextBlock Text="{Binding SeedingTorrentsHeader}" HorizontalAlignment="Center" />
+                            </Grid>
+                        </RadioButton>
+                        <RadioButton VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectPausedTorrentsCommand}">
+                            <Grid  Margin="5" Width="90">
+                                <!--<Rectangle Width="18" Height="18">
                           <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_list}" />
                           </Rectangle.OpacityMask>
-                        </Rectangle>
-                        <TextBlock Text="details" />
-                      </StackPanel>
-                    </RadioButton>
-                  </StackPanel>
+                        </Rectangle>-->
+                                <TextBlock Text="{Binding PausedTorrentsHeader}" HorizontalAlignment="Center" />
+                            </Grid>
+                        </RadioButton>
+                    </StackPanel>
                 </Grid>
+            </ToolBarPanel>
+        </Border>
 
-                <TabControl Grid.Row="1" SelectedIndex="{Binding SelectedTabIndex}" Margin="0" Padding="0">
-                  <TabControl.ItemContainerStyle>
-                    <Style TargetType="{x:Type TabItem}">
-                      <Setter Property="Visibility" Value="Collapsed" />
-                    </Style>
-                  </TabControl.ItemContainerStyle>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Visibility="Collapsed">
+                <TextBlock Text="States" Width="200" />
+                <ListView Grid.Column="0" />
+            </StackPanel>
 
-                  <!--Tab Peers -->
-                  <TabItem Header="Files">
-                    <DataGrid Margin="0,0,8,0" ItemsSource="{Binding TorrentFiles}" AutoGenerateColumns="False" HeadersVisibility="Row"
-                              Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsPresenter}}, Path=ActualWidth}">
-                      <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="FakeMargin"  IsReadOnly="True" Width="15">
-                          <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                              <Border />
-                            </DataTemplate>
-                          </DataGridTemplateColumn.CellTemplate>
+            <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="Collapsed" />
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <DataGrid Grid.Row="1" ItemsSource="{Binding TorrentManagers}" AutoGenerateColumns="False" x:Name="grid">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding RowClickCommand}" CommandParameter="{Binding ElementName=grid}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <!-- Columns -->
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header=""  IsReadOnly="True" Width="5">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <!--<ToggleButton Style="{StaticResource Foo}" />-->
+                                    <Border>
+                                        <Rectangle Width="10" Height="10" Fill="Goldenrod" VerticalAlignment="Center">
+                                            <Rectangle.OpacityMask>
+                                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_star}" />
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Name"  IsReadOnly="True" Width="Auto" MinWidth="100">
-                          <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                              <StackPanel Orientation="Horizontal">
-                                <Image Source="{Binding Image}" Width="16" Height="16" />
-                                <TextBlock Margin="5,0,0,0" Text="{Binding FileName}" />
-                              </StackPanel>
-                            </DataTemplate>
-                          </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn Header="Name"  IsReadOnly="True" Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" FontSize="13" Margin="5,0,10,0"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-
+                        <DataGridTemplateColumn Header="State"  IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <TextBlock Text="{Binding OverallStatus}" HorizontalAlignment="Center" Margin="5" />
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="Progress"  IsReadOnly="True">
-                          <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                              <Grid>
-                                <ProgressBar Value="{Binding Progress}" IsIndeterminate="false" Height="15" ToolTip="{Binding Progress}" />
-                                <TextBlock Text="{Binding Progress, StringFormat={}{0}%}" HorizontalAlignment="Center" FontSize="10" />
-                              </Grid>
-                            </DataTemplate>
-                          </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <ProgressBar Value="{Binding Progress}" IsIndeterminate="false" Height="15" ToolTip="{Binding Progress}" />
+                                        <TextBlock Text="{Binding Progress, StringFormat={}{0}% }" HorizontalAlignment="Center" FontSize="10" />
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Size"  IsReadOnly="True">
-                          <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                              <TextBlock Text="{Binding SizeInMB, StringFormat={}{0} MB}" Margin="5,0,0,0" />
-                            </DataTemplate>
-                          </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn Header="Download speed"  IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DownloadSpeed}" HorizontalAlignment="Center" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Spacer"  IsReadOnly="True" Width="*">
-                          <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                              <Border />
-                            </DataTemplate>
-                          </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn Header="Upload speed"  IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding UploadSpeed}" HorizontalAlignment="Center" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                      </DataGrid.Columns>
-                    </DataGrid>
-                  </TabItem>
-                  <!--Tab Peers -->
-                  <TabItem Header="Peers">
-                    <DataGrid Margin="0,0,7,0" ItemsSource="{Binding AllPeers}" AutoGenerateColumns="False" HeadersVisibility="Row"
+                        <DataGridTemplateColumn Header="Ratio"  IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Ratio}" HorizontalAlignment="Center" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header=""  IsReadOnly="True" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+                    <!--Row Style-->
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Setter Property="DetailsVisibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush3}" />
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="DetailsVisibility">
+                                                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="DetailsVisibility">
+                                                    <DiscreteObjectKeyFrame KeyTime="0:0:0.4"  Value="{x:Static Visibility.Collapsed}" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+
+                    <!--RowDetails Template-->
+                    <DataGrid.RowDetailsTemplate>
+                        <DataTemplate>
+                            <Grid Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=ActualWidth}" MaxHeight="300">
+                                <Grid.LayoutTransform>
+                                    <ScaleTransform ScaleY="0" />
+                                </Grid.LayoutTransform>
+                                <Grid.Style>
+                                    <Style TargetType="Grid">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}"
+                                   Value="True">
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="LayoutTransform.ScaleY">
+                                                                <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1">
+                                                                    <EasingDoubleKeyFrame.EasingFunction>
+                                                                        <CubicEase EasingMode="EaseInOut" />
+                                                                    </EasingDoubleKeyFrame.EasingFunction>
+                                                                </EasingDoubleKeyFrame>
+                                                            </DoubleAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.EnterActions>
+                                                <DataTrigger.ExitActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="LayoutTransform.ScaleY">
+                                                                <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="0">
+                                                                    <EasingDoubleKeyFrame.EasingFunction>
+                                                                        <CubicEase EasingMode="EaseInOut" />
+                                                                    </EasingDoubleKeyFrame.EasingFunction>
+                                                                </EasingDoubleKeyFrame>
+                                                            </DoubleAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.ExitActions>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Style>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid Background="White">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="2">
+                                        <StackPanel.Resources>
+                                            <Style TargetType="RadioButton" BasedOn="{StaticResource NicoRadioButton}">
+                                                <Setter Property="FontWeight" Value="Normal" />
+                                                <Setter Property="FontSize" Value="14" />
+                                                <Setter Property="Margin" Value="5" />
+                                            </Style>
+                                            <Style TargetType="Rectangle">
+                                                <Setter Property="Margin" Value="0,0,5,0" />
+                                                <Setter Property="Fill" Value="{DynamicResource AccentColorBrush}" />
+                                            </Style>
+                                        </StackPanel.Resources>
+                                        <RadioButton  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectFilesCommand}" IsChecked="True">
+                                            <StackPanel Margin="5" Orientation="Horizontal" VerticalAlignment="Center" Width="90">
+                                                <Rectangle Width="18" Height="20">
+                                                    <Rectangle.OpacityMask>
+                                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_multiple}" />
+                                                    </Rectangle.OpacityMask>
+                                                </Rectangle>
+                                                <TextBlock Text="{Binding FilesHeader}" />
+                                            </StackPanel>
+                                        </RadioButton>
+                                        <RadioButton  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectPeersCommand}">
+                                            <StackPanel  Margin="5" Orientation="Horizontal" VerticalAlignment="Center" Width="90">
+                                                <Rectangle Width="18" Height="18">
+                                                    <Rectangle.OpacityMask>
+                                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_people}" />
+                                                    </Rectangle.OpacityMask>
+                                                </Rectangle>
+                                                <TextBlock Text="{Binding PeersHeader}" />
+                                            </StackPanel>
+                                        </RadioButton>
+                                        <RadioButton VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectDetailsCommand}">
+                                            <StackPanel  Margin="5" Orientation="Horizontal" VerticalAlignment="Center" Width="90">
+                                                <Rectangle Width="18" Height="18">
+                                                    <Rectangle.OpacityMask>
+                                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_list}" />
+                                                    </Rectangle.OpacityMask>
+                                                </Rectangle>
+                                                <TextBlock Text="details" />
+                                            </StackPanel>
+                                        </RadioButton>
+                                    </StackPanel>
+                                </Grid>
+
+                                <TabControl Grid.Row="1" SelectedIndex="{Binding SelectedTabIndex}" Margin="0" Padding="0">
+                                    <TabControl.ItemContainerStyle>
+                                        <Style TargetType="{x:Type TabItem}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </Style>
+                                    </TabControl.ItemContainerStyle>
+
+                                    <!--Tab Peers -->
+                                    <TabItem Header="Files">
+                                        <DataGrid Margin="0,0,8,0" ItemsSource="{Binding TorrentFiles}" AutoGenerateColumns="False" HeadersVisibility="Row"
+                              Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsPresenter}}, Path=ActualWidth}">
+                                            <DataGrid.Columns>
+                                                <DataGridTemplateColumn Header="FakeMargin"  IsReadOnly="True" Width="15">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Border />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTemplateColumn Header="Name"  IsReadOnly="True" Width="Auto" MinWidth="100">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Image Source="{Binding Image}" Width="16" Height="16" />
+                                                                <TextBlock Margin="5,0,0,0" Text="{Binding FileName}" />
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+
+                                                <DataGridTemplateColumn Header="Progress"  IsReadOnly="True">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Grid>
+                                                                <ProgressBar Value="{Binding Progress}" IsIndeterminate="false" Height="15" ToolTip="{Binding Progress}" />
+                                                                <TextBlock Text="{Binding Progress, StringFormat={}{0}%}" HorizontalAlignment="Center" FontSize="10" />
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTemplateColumn Header="Size"  IsReadOnly="True">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding SizeInMB, StringFormat={}{0} MB}" Margin="5,0,0,0" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTemplateColumn Header="Spacer"  IsReadOnly="True" Width="*">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Border />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </TabItem>
+                                    <!--Tab Peers -->
+                                    <TabItem Header="Peers">
+                                        <DataGrid Margin="0,0,7,0" ItemsSource="{Binding AllPeers}" AutoGenerateColumns="False" HeadersVisibility="Row"
                                     Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsPresenter}}, Path=ActualWidth}">
-                      <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="FakeMargin"  IsReadOnly="True" Width="15">
-                          <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                              <Border />
-                            </DataTemplate>
-                          </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Uri"  IsReadOnly="True" Width="Auto">
-                          <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                              <TextBlock Text="{Binding Uri.Host}" />
-                            </DataTemplate>
-                          </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Software"  IsReadOnly="True" Width="Auto">
-                          <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                              <TextBlock Text="{Binding ClientApp.ShortId}" />
-                            </DataTemplate>
-                          </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="DownloadSpeed"  IsReadOnly="True" Width="Auto">
-                          <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                              <TextBlock Text="{Binding Monitor.DownloadSpeed, StringFormat={}{0} bytes/sec}" />
-                            </DataTemplate>
-                          </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="UploadSpeed"  IsReadOnly="True" Width="Auto">
-                          <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                              <TextBlock Text="{Binding Monitor.UploadSpeed,  StringFormat={}{0} bytes/sec}" />
-                            </DataTemplate>
-                          </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Spacer"  IsReadOnly="True" Width="*">
-                          <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                              <Border />
-                            </DataTemplate>
-                          </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                      </DataGrid.Columns>
-                    </DataGrid>
-                  </TabItem>
-                </TabControl>
-              </Grid>
-            </DataTemplate>
-          </DataGrid.RowDetailsTemplate>
+                                            <DataGrid.Columns>
+                                                <DataGridTemplateColumn Header="FakeMargin"  IsReadOnly="True" Width="15">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Border />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTemplateColumn Header="Uri"  IsReadOnly="True" Width="Auto">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Uri.Host}" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTemplateColumn Header="Software"  IsReadOnly="True" Width="Auto">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding ClientApp.ShortId}" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTemplateColumn Header="DownloadSpeed"  IsReadOnly="True" Width="Auto">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Monitor.DownloadSpeed, StringFormat={}{0} bytes/sec}" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTemplateColumn Header="UploadSpeed"  IsReadOnly="True" Width="Auto">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Monitor.UploadSpeed,  StringFormat={}{0} bytes/sec}" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTemplateColumn Header="Spacer"  IsReadOnly="True" Width="*">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Border />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </TabItem>
+                                </TabControl>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGrid.RowDetailsTemplate>
 
-          <!--RowHeader Template-->
-          <DataGrid.RowHeaderTemplate>
-            <DataTemplate>
-              <StackPanel Width="20">
-                <TextBlock Text="1000" />
-                <ToggleButton Style="{StaticResource Foo}" x:Name="RowHeaderToggleButton" Command="{Binding ToggledCommand}" />
-              </StackPanel>
-            </DataTemplate>
-          </DataGrid.RowHeaderTemplate>
-        </DataGrid>
-      </Grid>
+                    <!--RowHeader Template-->
+                    <DataGrid.RowHeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Width="20">
+                                <TextBlock Text="1000" />
+                                <ToggleButton Style="{StaticResource Foo}" x:Name="RowHeaderToggleButton" Command="{Binding ToggledCommand}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGrid.RowHeaderTemplate>
+                </DataGrid>
+            </Grid>
 
-      <!--<DockPanel Grid.Column="2">
+            <!--<DockPanel Grid.Column="2">
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="8">
                     <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="{Binding ElementName=FieldsRadioButton, Path=IsChecked, Mode=OneWay}" />
                     <RadioButton Style="{StaticResource MaterialDesignRadioButton}" x:Name="ButtonsRadioButton" IsChecked="True" Margin="8 0 0 0" VerticalAlignment="Center">Buttons</RadioButton>
                     <RadioButton Style="{StaticResource MaterialDesignRadioButton}" x:Name="FieldsRadioButton" Margin="8 0 0 0" VerticalAlignment="Center">Fields</RadioButton>
                 </StackPanel>
             </DockPanel>-->
+        </Grid>
+        <StatusBar Grid.Row="2">
+            <StatusBarItem HorizontalAlignment="Left">
+                <TextBlock Text="" />
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock Text="{Binding StatusMessage}" />
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
-    <StatusBar Grid.Row="2">
-      <StatusBarItem HorizontalAlignment="Left">
-        <TextBlock Text="" />
-      </StatusBarItem>
-      <StatusBarItem HorizontalAlignment="Right">
-        <TextBlock Text="{Binding StatusMessage}" />
-      </StatusBarItem>
-    </StatusBar>
-  </Grid>
 </controls:MetroWindow>

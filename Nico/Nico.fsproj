@@ -62,7 +62,7 @@
     <None Include="App.config" />
     <Content Include="packages.config" />
     <Compile Include="Utils.fs" />
-    <Compile Include="InfoHashExtension.fs" />
+    <Compile Include="NicoExtension.fs" />
     <Compile Include="Config.fs" />
     <Compile Include="ViewModelBase.fs" />
     <Compile Include="RelayCommand.fs" />

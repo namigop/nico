@@ -1,7 +1,7 @@
 ﻿namespace Nico
 
 open FsXaml
-open InfoHashExtension
+open NicoExtensions
 open MonoTorrent.BEncoding
 open MonoTorrent.Client
 open MonoTorrent.Client.Encryption
@@ -55,7 +55,7 @@ type MainWindowViewModel() as this =
 
     let refreshTimer =
         let temp = DispatcherTimer()
-        temp.Interval <- TimeSpan.FromMilliseconds(1000.0)
+        temp.Interval <- TimeSpan.FromMilliseconds(500.0)
         temp.Tick |> Observable.add (fun arg ->
                         this.OnPropertyChanged("StatusMessage")
                         if (torrentApp.AllTorrentCount > 0) then             
@@ -66,15 +66,19 @@ type MainWindowViewModel() as this =
         temp
 
     let showTorrentManagers mgrs =
+        displayedTorrentManagers |> Seq.iter (fun m -> m.StopWatch())
         displayedTorrentManagers.Clear()
         mgrs 
         |> Seq.map(fun mgr -> TorrentManagerItem(mgr, pathValues, fun todo -> () ))
-        |> Seq.iter(fun item -> displayedTorrentManagers.Add item)
+        |> Seq.iter(fun item ->
+             displayedTorrentManagers.Add item
+             item.StartWatch())
 
 
     let loadedCommand = 
         torrentApp.LoadTorrentFiles()
-        torrentApp.AllTorrentManagers  |> Seq.iter (fun mgr ->  torrentApp.Start mgr)          
+        torrentApp.AllTorrentManagers  |> Seq.iter (fun mgr ->  torrentApp.Start mgr)      
+        showTorrentManagers torrentApp.AllTorrentManagers   
         refreshTimer.Start()
 
     let addTorrentCommand =
