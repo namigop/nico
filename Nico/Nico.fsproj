@@ -71,6 +71,7 @@
     <Compile Include="TorrentManagerItem.fs" />
     <Compile Include="TorrentClient.fs" />
     <Resource Include="MainWindow.xaml" />
+    <Compile Include="TorrentApp.fs" />
     <Compile Include="MainWindow.fs" />
     <Resource Include="App.xaml" />
     <Compile Include="App..fs" />

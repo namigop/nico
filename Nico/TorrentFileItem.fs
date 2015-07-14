@@ -12,7 +12,7 @@ open System
 open System.Windows.Threading
 open System.IO
 
-type TorrentFileItem(torFile : TorrentFile, downloadPath) as this =
+type TorrentFileItem(torFile : TorrentFile, downloadPath) =
     inherit ViewModelBase()
     let mutable progress = 0.0
     let mutable fileName = torFile.Path

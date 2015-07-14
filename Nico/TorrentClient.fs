@@ -12,6 +12,7 @@ open MonoTorrent.Dht
 open MonoTorrent.Dht.Listeners
 open InfoHashExtension
  
+
 module TorrentClient =
     let setupSettings downloadPath port =
         let engineSettings =
@@ -73,9 +74,6 @@ module TorrentClient =
         mgr.TrackerManager |> Seq.iter (fun (tier:TrackerTier) ->
                 tier.GetTrackers()
                 |> Seq.iter (fun t ->  t.AnnounceComplete |> Observable.add onAnnounceComplete))
-        mgr
    
     let start (mgr:TorrentManager) = mgr.Start()
-
-
-     
+    

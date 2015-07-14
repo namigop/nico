@@ -148,7 +148,7 @@
                         <Setter Property="Fill" Value="{DynamicResource AccentColorBrush}" />
                       </Style>
                     </StackPanel.Resources>
-                    <RadioButton  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectFilesCommand}" IsChecked="True">
+                    <RadioButton  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectAllTorrentsCommand}" IsChecked="True">
                       <Grid Margin="5"   Width="90">
                         <!--<Rectangle Width="18" Height="20">
                           <Rectangle.OpacityMask>
@@ -158,7 +158,7 @@
                         <TextBlock Text="{Binding AllTorrentsHeader}" HorizontalAlignment="Center" />
                       </Grid>
                     </RadioButton>
-                    <RadioButton  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectPeersCommand}">
+                        <RadioButton  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectActiveTorrentsCommand}">
                       <Grid  Margin="5" Width="100">
                         <!--<Rectangle Width="18" Height="18">
                           <Rectangle.OpacityMask>
@@ -168,7 +168,7 @@
                         <TextBlock Text="{Binding DownloadingTorrentsHeader}" HorizontalAlignment="Center"/>
                       </Grid>
                     </RadioButton>
-                    <RadioButton  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectPeersCommand}">
+                        <RadioButton  VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectSeedingTorrentsCommand}">
                       <Grid  Margin="5" Width="90">
                         <!--<Rectangle Width="18" Height="18">
                           <Rectangle.OpacityMask>
@@ -178,7 +178,7 @@
                         <TextBlock Text="{Binding SeedingTorrentsHeader}" HorizontalAlignment="Center"/>
                       </Grid>
                     </RadioButton>
-                    <RadioButton VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <RadioButton VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectPausedTorrentsCommand}">
                       <Grid  Margin="5" Width="90">
                         <!--<Rectangle Width="18" Height="18">
                           <Rectangle.OpacityMask>
@@ -395,7 +395,7 @@
                         <TextBlock Text="{Binding PeersHeader}" />
                       </StackPanel>
                     </RadioButton>
-                    <RadioButton VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <RadioButton VerticalAlignment="Center" HorizontalAlignment="Center" Command="{Binding SelectDetailsCommand}">
                       <StackPanel  Margin="5" Orientation="Horizontal" VerticalAlignment="Center" Width="90">
                         <Rectangle Width="18" Height="18">
                           <Rectangle.OpacityMask>
