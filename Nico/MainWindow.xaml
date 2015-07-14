@@ -83,7 +83,7 @@
                             </StackPanel>
                         </Button>
                         <Separator />
-                        <Button Margin="5">
+                        <Button Margin="5" Command="{Binding PauseTorrentCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
                                     <Rectangle.OpacityMask>
@@ -211,7 +211,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <DataGrid Grid.Row="1" ItemsSource="{Binding TorrentManagers}" AutoGenerateColumns="False" x:Name="grid">
+                <DataGrid Grid.Row="1" ItemsSource="{Binding TorrentManagers}" AutoGenerateColumns="False" x:Name="grid" SelectedItem="{Binding SelectedTorrentManager}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDoubleClick">
                             <i:InvokeCommandAction Command="{Binding RowClickCommand}" CommandParameter="{Binding ElementName=grid}" />

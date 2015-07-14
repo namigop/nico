@@ -36,7 +36,7 @@ type MainWindowViewModel() as this =
     let mutable title = ""
     let pathValues = Config.getPathValues()
     let mutable port = 6746
-
+    let mutable selectedTorrentManager = Unchecked.defaultof<TorrentManagerItem>
    
     let allSettings = TorrentClient.setupSettings pathValues.DownloadsPath port
     
@@ -107,7 +107,6 @@ type MainWindowViewModel() as this =
         let onRun (arg) = showTorrentManagers torrentApp.PausedTorrentManagers 
         new RelayCommand((fun c -> true), onRun)
 
-    
     let selectAllTorrentsCommand =
         let onRun (arg) = showTorrentManagers torrentApp.AllTorrentManagers 
         new RelayCommand((fun c -> true), onRun)
@@ -120,7 +119,14 @@ type MainWindowViewModel() as this =
                 if not (ancestor.IsNone) then ()
         new RelayCommand((fun c -> true), onRun)
 
+    let pauseTorrentCommand =
+        let onRun (arg) = 
+            if not (box selectedTorrentManager = null) then
+                selectedTorrentManager.TorrentManager.Pause()
+                 
+        new RelayCommand((fun c -> true), onRun)
 
+    member x.PauseTorrentCommand = pauseTorrentCommand
     member x.SelectAllTorrentsCommand = selectAllTorrentsCommand
     member x.SelectActiveTorrentsCommand = selectActiveTorrentsCommand
     member x.SelectSeedingTorrentsCommand = selectSeedingTorrentsCommand
@@ -130,6 +136,9 @@ type MainWindowViewModel() as this =
     member this.AddTorrentCommand = addTorrentCommand
     member this.RowClickCommand = rowClickCommand
 
+    member this.SelectedTorrentManager
+        with get () = selectedTorrentManager
+        and set v = this.RaiseAndSetIfChanged(&selectedTorrentManager, v, "SelectedTorrentManager")
     member this.Title
         with get () = title
         and set v = this.RaiseAndSetIfChanged(&title, v, "Title")
