@@ -90,7 +90,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="MahApps.Metro">
-      <HintPath>..\..\..\..\DirectTorrent-develop\DirectTorrent-develop\packages\MahApps.Metro.1.1.2.0\lib\net45\MahApps.Metro.dll</HintPath>
+      <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\MahApps.Metro.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="MaterialDesignColors">
       <HintPath>..\packages\MaterialDesignColors.0.0.0.0\lib\net45\MaterialDesignColors.dll</HintPath>
@@ -117,7 +118,8 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Interactivity">
-      <HintPath>..\..\..\..\DirectTorrent-develop\DirectTorrent-develop\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\MahApps.Metro.1.1.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />

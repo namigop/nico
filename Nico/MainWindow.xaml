@@ -453,6 +453,13 @@
                                                         </DataTemplate>
                                                     </DataGridTemplateColumn.CellTemplate>
                                                 </DataGridTemplateColumn>
+                                                <DataGridTemplateColumn Header="Priority"  IsReadOnly="True">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <ComboBox ItemsSource="{Binding Priority}"  Margin="5,0,0,0" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
                                                 <DataGridTemplateColumn Header="Size"  IsReadOnly="True">
                                                     <DataGridTemplateColumn.CellTemplate>
                                                         <DataTemplate>

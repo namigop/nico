@@ -16,7 +16,7 @@ type TorrentFileItem(torFile : TorrentFile, downloadPath) =
     inherit ViewModelBase()
     let mutable progress = 0.0
     let mutable fileName = torFile.Path
-
+    let mutable priority = torFile.Priority
     let image = Utils.GetIcon torFile.FullPath
       
     member this.Image = image
@@ -27,6 +27,10 @@ type TorrentFileItem(torFile : TorrentFile, downloadPath) =
         and set v = this.RaiseAndSetIfChanged(&progress, v, "Progress")
 
     member this.FileName = fileName
+
+    member this.Priority
+        with get () = priority
+        and set v = this.RaiseAndSetIfChanged(&priority, v, "Priority")
 
     
     member this.SizeInMB = Math.Round(Convert.ToDouble(torFile.Length)/(1024.0 * 1024.0), 2)

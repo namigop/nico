@@ -37,12 +37,11 @@ type MainWindowViewModel() as this =
     let pathValues = Config.getPathValues()
     let mutable port = 6746
     let mutable selectedTorrentManager = Unchecked.defaultof<TorrentManagerItem>
-   
+
     let allSettings = TorrentClient.setupSettings pathValues.DownloadsPath port
-    
-        
-    let torrentApp = 
-        TorrentApp.create 
+
+    let torrentApp =
+        TorrentApp.create
             port
             (fun a -> statusMessage <- String.Format("Connected to {0} peers : {1}", a.ExistingPeers + a.NewPeers, DateTime.Now))
             (fun b -> statusMessage <- String.Format("Piece hashed : {0}", DateTime.Now))
@@ -51,15 +50,14 @@ type MainWindowViewModel() as this =
 
     let clientEngineItem = ClientEngineItem(torrentApp.Engine)
     let displayedTorrentManagers = ObservableCollection<TorrentManagerItem>()
-        
 
     let refreshTimer =
         let temp = DispatcherTimer()
         temp.Interval <- TimeSpan.FromMilliseconds(500.0)
         temp.Tick |> Observable.add (fun arg ->
                         this.OnPropertyChanged("StatusMessage")
-                        if (torrentApp.AllTorrentCount > 0) then             
-                            this.AllTorrentsHeader <- String.Format("All ({0})", torrentApp.AllTorrentCount)              
+                        if (torrentApp.AllTorrentCount > 0) then
+                            this.AllTorrentsHeader <- String.Format("All ({0})", torrentApp.AllTorrentCount)
                             this.PausedTorrentsHeader <- String.Format("Paused ({0})", torrentApp.PausedTorrentManagers |> Seq.length)
                             this.SeedingTorrentsHeader <- String.Format("Seeding ({0})", torrentApp.SeedingTorrentManagers |> Seq.length)
                             this.DownloadingTorrentsHeader <- String.Format("Active ({0})", torrentApp.ActiveTorrentManagers |> Seq.length))
@@ -68,17 +66,16 @@ type MainWindowViewModel() as this =
     let showTorrentManagers mgrs =
         displayedTorrentManagers |> Seq.iter (fun m -> m.StopWatch())
         displayedTorrentManagers.Clear()
-        mgrs 
+        mgrs
         |> Seq.map(fun mgr -> TorrentManagerItem(mgr, pathValues, fun todo -> () ))
         |> Seq.iter(fun item ->
              displayedTorrentManagers.Add item
              item.StartWatch())
 
-
-    let loadedCommand = 
+    let loadedCommand =
         torrentApp.LoadTorrentFiles()
-        torrentApp.AllTorrentManagers  |> Seq.iter (fun mgr ->  torrentApp.Start mgr)      
-        showTorrentManagers torrentApp.AllTorrentManagers   
+        torrentApp.AllTorrentManagers  |> Seq.iter (fun mgr ->  torrentApp.Start mgr)
+        showTorrentManagers torrentApp.AllTorrentManagers
         refreshTimer.Start()
 
     let addTorrentCommand =
@@ -92,23 +89,23 @@ type MainWindowViewModel() as this =
                 if not (File.Exists target) then
                     File.Copy(torrent, target)
                     let mgr = torrentApp.AddTorrentManager target
-                    torrentApp.Start mgr      
+                    torrentApp.Start mgr
         new RelayCommand((fun c -> true), onRun)
 
     let selectActiveTorrentsCommand =
-        let onRun (arg) = showTorrentManagers torrentApp.ActiveTorrentManagers 
+        let onRun (arg) = showTorrentManagers torrentApp.ActiveTorrentManagers
         new RelayCommand((fun c -> true), onRun)
 
     let selectSeedingTorrentsCommand =
-        let onRun (arg) = showTorrentManagers torrentApp.SeedingTorrentManagers 
+        let onRun (arg) = showTorrentManagers torrentApp.SeedingTorrentManagers
         new RelayCommand((fun c -> true), onRun)
- 
+
     let selectPausedTorrentsCommand =
-        let onRun (arg) = showTorrentManagers torrentApp.PausedTorrentManagers 
+        let onRun (arg) = showTorrentManagers torrentApp.PausedTorrentManagers
         new RelayCommand((fun c -> true), onRun)
 
     let selectAllTorrentsCommand =
-        let onRun (arg) = showTorrentManagers torrentApp.AllTorrentManagers 
+        let onRun (arg) = showTorrentManagers torrentApp.AllTorrentManagers
         new RelayCommand((fun c -> true), onRun)
 
     let rowClickCommand =
@@ -120,18 +117,53 @@ type MainWindowViewModel() as this =
         new RelayCommand((fun c -> true), onRun)
 
     let pauseTorrentCommand =
-        let onRun (arg) = 
+        let onRun (arg) =
             if not (box selectedTorrentManager = null) then
                 selectedTorrentManager.TorrentManager.Pause()
-                 
         new RelayCommand((fun c -> true), onRun)
 
+    let startTorrentCommand =
+        let onRun (arg) =
+            if not (box selectedTorrentManager = null) then
+                selectedTorrentManager.TorrentManager.Start()
+        new RelayCommand((fun c -> true), onRun)
+    
+    let moveUpTorrentCommand =
+        let onRun (arg) =
+            if not (box selectedTorrentManager = null) then
+                selectedTorrentManager.TorrentManager.Torrent.Files.[0].Priority <- Priority.
+        new RelayCommand((fun c -> true), onRun)
+
+    let stopTorrentCommand = ()
+//     // When stopping a torrent, certain cleanup tasks need to be perfomed
+// 4             // such as flushing unwritten data to disk and informing the tracker
+// 5             // the client is no longer downloading/seeding the torrent. To allow for
+// 6             // this, when Stop is called the manager enters a 'Stopping' state. Once
+// 7             // all the tasks are completed the manager will enter the 'Stopped' state.
+// 8 
+// 9             // Hook into the TorrentStateChanged event so we can tell when the torrent
+//10             // finishes cleanup
+//11             manager.TorrentStateChanged += delegate (object o, TorrentStateChangedEventArgs e) {
+//12                 if (e.NewState == TorrentState.Stopping)
+//13                 {
+//14                     Console.WriteLine("Torrent {0} has begun stopping", e.TorrentManager.Torrent.Name);
+//15                 }
+//16                 else if (e.NewState == TorrentState.Stopped)
+//17                 {
+//18                     // It is now safe to unregister the torrent from the engine and dispose of it (if required)
+//19                     engine.Unregister(manager);
+//20                     manager.Dispose();
+//21 
+//22                     Console.WriteLine("Torrent {0} has stopped", e.TorrentManager.Torrent.Name);
+//23                 }
+
     member x.PauseTorrentCommand = pauseTorrentCommand
+    member x.StartTorrentCommand = startTorrentCommand
+    member x.StopTorrentCommand = stopTorrentCommand
     member x.SelectAllTorrentsCommand = selectAllTorrentsCommand
     member x.SelectActiveTorrentsCommand = selectActiveTorrentsCommand
     member x.SelectSeedingTorrentsCommand = selectSeedingTorrentsCommand
     member x.SelectPausedTorrentsCommand = selectPausedTorrentsCommand
-
     member this.LoadedCommand = loadedCommand
     member this.AddTorrentCommand = addTorrentCommand
     member this.RowClickCommand = rowClickCommand
