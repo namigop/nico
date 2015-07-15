@@ -11,6 +11,7 @@ open MonoTorrent.Dht.Listeners
 open System
 open System.Windows.Threading
 open System.IO
+open System.Collections.ObjectModel
 
 type TorrentFileItem(torFile : TorrentFile, downloadPath) =
     inherit ViewModelBase()
@@ -19,6 +20,15 @@ type TorrentFileItem(torFile : TorrentFile, downloadPath) =
     let mutable priority = torFile.Priority
     let image = Utils.GetIcon torFile.FullPath
       
+    let priorities =
+        let temp = new ObservableCollection<Priority>()
+        temp.Add(Priority.Highest)
+        temp.Add(Priority.High)
+        temp.Add(Priority.Normal)
+        temp.Add(Priority.Low)
+        temp.Add(Priority.Lowest)
+        temp.Add(Priority.DoNotDownload)
+        temp
     member this.Image = image
     member this.UpdateProgress() =
         this.Progress <- Math.Round(torFile.BitField.PercentComplete,2)
@@ -28,9 +38,12 @@ type TorrentFileItem(torFile : TorrentFile, downloadPath) =
 
     member this.FileName = fileName
 
+    member this.Priorities = priorities
     member this.Priority
         with get () = priority
-        and set v = this.RaiseAndSetIfChanged(&priority, v, "Priority")
+        and set v = 
+            this.RaiseAndSetIfChanged(&priority, v, "Priority")
+            torFile.Priority <- v
 
     
     member this.SizeInMB = Math.Round(Convert.ToDouble(torFile.Length)/(1024.0 * 1024.0), 2)

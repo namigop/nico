@@ -125,38 +125,46 @@ type MainWindowViewModel() as this =
     let startTorrentCommand =
         let onRun (arg) =
             if not (box selectedTorrentManager = null) then
-                selectedTorrentManager.TorrentManager.Start()
+                torrentApp.Start selectedTorrentManager.TorrentManager
         new RelayCommand((fun c -> true), onRun)
     
+    let moveTorrent (mgr:TorrentManagerItem) (getTargetPos : int -> int) (afterMove: TorrentManagerItem -> unit) =
+        if not (box mgr = null) then
+            let curPos = displayedTorrentManagers.IndexOf(mgr)
+            let targetPos =  getTargetPos curPos
+            if displayedTorrentManagers.Remove(mgr) then
+                displayedTorrentManagers.Insert(targetPos, mgr)       
+                afterMove mgr
+
     let moveUpTorrentCommand =
+        let onRun (arg) = 
+            moveTorrent 
+                selectedTorrentManager
+                (fun  curPos ->  
+                    let temp = curPos - 1
+                    if temp < 0 then 0 else temp)
+                (fun mgrItem -> mgrItem.TorrentManager.Torrent.Files.[0].Priority <- Priority.Normal) //TODO
+        new RelayCommand((fun c -> true), onRun)
+    
+    let moveDownTorrentCommand =
         let onRun (arg) =
-            if not (box selectedTorrentManager = null) then
-                selectedTorrentManager.TorrentManager.Torrent.Files.[0].Priority <- Priority.
+            moveTorrent 
+                selectedTorrentManager
+                (fun curPos ->  
+                    let temp = curPos + 1
+                    if temp <= displayedTorrentManagers.Count then temp else curPos)
+                (fun mgrItem -> mgrItem.TorrentManager.Torrent.Files.[0].Priority <- Priority.Normal) //TODO            
         new RelayCommand((fun c -> true), onRun)
 
-    let stopTorrentCommand = ()
-//     // When stopping a torrent, certain cleanup tasks need to be perfomed
-// 4             // such as flushing unwritten data to disk and informing the tracker
-// 5             // the client is no longer downloading/seeding the torrent. To allow for
-// 6             // this, when Stop is called the manager enters a 'Stopping' state. Once
-// 7             // all the tasks are completed the manager will enter the 'Stopped' state.
-// 8 
-// 9             // Hook into the TorrentStateChanged event so we can tell when the torrent
-//10             // finishes cleanup
-//11             manager.TorrentStateChanged += delegate (object o, TorrentStateChangedEventArgs e) {
-//12                 if (e.NewState == TorrentState.Stopping)
-//13                 {
-//14                     Console.WriteLine("Torrent {0} has begun stopping", e.TorrentManager.Torrent.Name);
-//15                 }
-//16                 else if (e.NewState == TorrentState.Stopped)
-//17                 {
-//18                     // It is now safe to unregister the torrent from the engine and dispose of it (if required)
-//19                     engine.Unregister(manager);
-//20                     manager.Dispose();
-//21 
-//22                     Console.WriteLine("Torrent {0} has stopped", e.TorrentManager.Torrent.Name);
-//23                 }
-
+    let stopTorrentCommand =
+        let onRun (arg) =
+           let selected = selectedTorrentManager.TorrentManager
+           torrentApp.Stop selectedTorrentManager.TorrentManager         
+        new RelayCommand((fun c -> true), onRun)
+        
+ 
+    member x.MoveUpTorrentCommand = moveUpTorrentCommand
+    member x.MoveDownTorrentCommand = moveDownTorrentCommand
     member x.PauseTorrentCommand = pauseTorrentCommand
     member x.StartTorrentCommand = startTorrentCommand
     member x.StopTorrentCommand = stopTorrentCommand

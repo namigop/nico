@@ -23,6 +23,7 @@ open NicoExtensions
     abstract LoadTorrentFiles : (unit) -> unit
     abstract Engine : ClientEngine
     abstract AddTorrentManager : string -> TorrentManager
+    abstract Stop : TorrentManager -> unit
 
  module TorrentApp =
     
@@ -49,8 +50,8 @@ open NicoExtensions
                     mgr
                 member x.Register mgr = TorrentClient.register engine onPeersFound onPieceHashed onTorrentStateChanged onAnnounceComplete mgr
                 member x.AllTorrentManagers = seq { for a in allTorrentManagers do yield a }
-                member x.Start mgr =
-                    TorrentClient.start mgr
+                member x.Start mgr =  TorrentClient.start mgr
+                   
                      
                 member x.SeedingTorrentManagers = x.AllTorrentManagers |> Seq.filter (fun t -> t.State = TorrentState.Seeding)
                 member x.PausedTorrentManagers = x.AllTorrentManagers |> Seq.filter (fun t -> t.State = TorrentState.Paused)
@@ -59,7 +60,7 @@ open NicoExtensions
                     loadTorrents pathValues allSettings.TorrentDefault allTorrentManagers
                     allTorrentManagers |> Seq.iter (fun mgr -> x.Register mgr )
                     
-                    
+                member x.Stop mgr =  TorrentClient.stop mgr x.Engine
 
         }
 

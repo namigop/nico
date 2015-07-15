@@ -43,8 +43,9 @@ type TorrentManagerItem(manager : TorrentManager, paths:PathValues, onToggled: o
 
     let allPeers = new ObservableCollection<PeerId>()
     let timer =
+        let finalInterval = TimeSpan.FromMilliseconds(500.0)
         let temp = DispatcherTimer()
-        temp.Interval <- TimeSpan.FromMilliseconds(1000.0)
+        temp.Interval <- TimeSpan.FromMilliseconds(100.0)
         temp.Tick |> Observable.add (fun arg ->
                         this.Progress <- Math.Round(manager.Progress, 2)
                         this.State <- manager.State.ToString()
@@ -60,8 +61,10 @@ type TorrentManagerItem(manager : TorrentManager, paths:PathValues, onToggled: o
                         this.DownloadSizeMB <- String.Format("{0:0.00} MB", Convert.ToDouble(manager.Monitor.DataBytesDownloaded) / (1024.0 * 1024.0))
                         this.UploadSizeMB <- String.Format(" {0:0.00} MB", Convert.ToDouble(manager.Monitor.DataBytesUploaded) / (1024.0 * 1024.0))
                         this.Ratio <-
-                            if manager.Monitor.DataBytesDownloaded > 0L then
-                                Math.Round(Convert.ToDouble(manager.Monitor.DataBytesUploaded/manager.Monitor.DataBytesDownloaded), 3)
+                            if manager.Monitor.DataBytesDownloaded > 0L then    
+                                let uploaded = Convert.ToDouble(manager.Monitor.DataBytesUploaded)         
+                                let downloaded = Convert.ToDouble(manager.Monitor.DataBytesDownloaded)                 
+                                Math.Round(uploaded/downloaded, 3)
                             else
                                 0.0
                         for t in torrentFiles do
@@ -75,6 +78,17 @@ type TorrentManagerItem(manager : TorrentManager, paths:PathValues, onToggled: o
                             match getPeer p with
                             | Some(p3) -> ()
                             | None -> allPeers.Add(p)
+
+                        //rampup the initial refresh
+                        if temp.Interval < finalInterval then
+                             temp.Interval <- temp.Interval.Add(TimeSpan.FromMilliseconds(50.0))
+                             temp.Stop()
+                             temp.Start()
+                        else
+                            temp.Interval <- finalInterval
+                            temp.Stop()
+                            temp.Start()
+
                          )
         temp
 

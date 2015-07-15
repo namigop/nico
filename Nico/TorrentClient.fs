@@ -76,4 +76,11 @@ module TorrentClient =
                 |> Seq.iter (fun t ->  t.AnnounceComplete |> Observable.add onAnnounceComplete))
    
     let start (mgr:TorrentManager) = mgr.Start()
+    let stop (mgr:TorrentManager) (engine:ClientEngine)  = 
+        mgr.TorrentStateChanged |> Observable.add (fun args ->
+                if (args.NewState = TorrentState.Stopped) then
+                    engine.Unregister mgr
+                    mgr.Dispose()
+
+            )
     

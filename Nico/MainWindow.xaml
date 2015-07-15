@@ -64,7 +64,7 @@
                     <ToolBar>
                         <Button Command="{Binding AddTorrentCommand}" Margin="5">
                             <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
+                                <Rectangle Width="16" Height="16" Fill="Green">
                                     <Rectangle.OpacityMask>
                                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_add}" />
                                     </Rectangle.OpacityMask>
@@ -74,7 +74,7 @@
                         </Button>
                         <Button Margin="5">
                             <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
+                                <Rectangle Width="16" Height="16" Fill="Firebrick" Opacity="0.75">
                                     <Rectangle.OpacityMask>
                                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_list_delete}" />
                                     </Rectangle.OpacityMask>
@@ -83,9 +83,9 @@
                             </StackPanel>
                         </Button>
                         <Separator />
-                        <Button Margin="5" Command="{Binding PauseTorrentCommand}">
+                        <Button Margin="5" Command="{Binding PauseTorrentCommand}" ToolTip="Pause the download for a while">
                             <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
+                                <Rectangle Width="16" Height="16" Fill="SteelBlue">
                                     <Rectangle.OpacityMask>
                                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_pause}" />
                                     </Rectangle.OpacityMask>
@@ -93,9 +93,9 @@
                                 <!--<TextBlock Text=" PAUSE" VerticalAlignment="Center" />-->
                             </StackPanel>
                         </Button>
-                        <Button Margin="5">
+                        <Button Margin="5" Command="{Binding StartTorrentCommand}"  ToolTip="Start downloading">
                             <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
+                                <Rectangle Width="16" Height="16" Fill="SteelBlue">
                                     <Rectangle.OpacityMask>
                                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_resume}" />
                                     </Rectangle.OpacityMask>
@@ -103,8 +103,18 @@
                                 <!--<TextBlock Text=" RESUME" VerticalAlignment="Center" />-->
                             </StackPanel>
                         </Button>
+                        <Button Margin="5" Command="{Binding StopTorrentCommand}" ToolTip="Stop the download and close all connections">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Fill="SteelBlue">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_control_stop}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <!--<TextBlock Text=" PAUSE" VerticalAlignment="Center" />-->
+                            </StackPanel>                            
+                        </Button>
                         <Separator />
-                        <Button Margin="5">
+                        <Button Margin="5" Command="{Binding MoveUpTorrentCommand}" ToolTip="Increase priority">
                             <StackPanel Orientation="Horizontal">
                                 <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
                                     <Rectangle.OpacityMask>
@@ -114,7 +124,7 @@
                                 <!--<TextBlock Text=" MOVE UP" VerticalAlignment="Center" />-->
                             </StackPanel>
                         </Button>
-                        <Button Margin="5">
+                        <Button Margin="5" Command="{Binding MoveDownTorrentCommand}" ToolTip="Dccrease priority">
                             <StackPanel Orientation="Horizontal">
                                 <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
                                     <Rectangle.OpacityMask>
@@ -127,7 +137,7 @@
                         <Separator />
                         <Button Margin="5">
                             <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="16" Height="16" Fill="{DynamicResource AccentColorBrush}">
+                                <Rectangle Width="16" Height="16" Fill="Gray">
                                     <Rectangle.OpacityMask>
                                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_cog}" />
                                     </Rectangle.OpacityMask>
@@ -442,7 +452,13 @@
                                                         </DataTemplate>
                                                     </DataGridTemplateColumn.CellTemplate>
                                                 </DataGridTemplateColumn>
-
+                                                <DataGridTemplateColumn Header="Size"  IsReadOnly="True">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding SizeInMB, StringFormat={}{0} MB}" Margin="5,0,0,0" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
                                                 <DataGridTemplateColumn Header="Progress"  IsReadOnly="True">
                                                     <DataGridTemplateColumn.CellTemplate>
                                                         <DataTemplate>
@@ -456,17 +472,11 @@
                                                 <DataGridTemplateColumn Header="Priority"  IsReadOnly="True">
                                                     <DataGridTemplateColumn.CellTemplate>
                                                         <DataTemplate>
-                                                            <ComboBox ItemsSource="{Binding Priority}"  Margin="5,0,0,0" />
+                                                            <ComboBox ItemsSource="{Binding Priorities}" SelectedItem="{Binding Priority}"  Margin="5,0,0,0" />
                                                         </DataTemplate>
                                                     </DataGridTemplateColumn.CellTemplate>
                                                 </DataGridTemplateColumn>
-                                                <DataGridTemplateColumn Header="Size"  IsReadOnly="True">
-                                                    <DataGridTemplateColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <TextBlock Text="{Binding SizeInMB, StringFormat={}{0} MB}" Margin="5,0,0,0" />
-                                                        </DataTemplate>
-                                                    </DataGridTemplateColumn.CellTemplate>
-                                                </DataGridTemplateColumn>
+                                              
                                                 <DataGridTemplateColumn Header="Spacer"  IsReadOnly="True" Width="*">
                                                     <DataGridTemplateColumn.CellTemplate>
                                                         <DataTemplate>
