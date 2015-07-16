@@ -47,16 +47,10 @@ type TorrentDownloadInfo() =
         if not (Directory.Exists(internalPath)) then
             (Directory.CreateDirectory internalPath) |> ignore
         
-        let torrentXmlInfoFileName = Path.GetFileNameWithoutExtension(this.TorrentFile) + ".xml"
+        let torrentXmlInfoFileName = Path.GetFileNameWithoutExtension(this.TorrentFile) + "tor.xml"
         let target = Path.Combine(internalPath, torrentXmlInfoFileName)
-        let ser = XmlSerializer(typeof<TorrentDownloadInfo>)
-        use ms = new  MemoryStream()
-        ser.Serialize(ms, this)
-        use reader =new StreamReader(ms)
-        ms.Seek(0L, SeekOrigin.Begin) |> ignore
-        reader.ReadToEnd()
-        |> fun content -> File.WriteAllText(target, content)
-
+        Utils.serialize<TorrentDownloadInfo>(this)
+        |> Utils.stringToFile target
 
 
          

@@ -103,6 +103,7 @@
       <HintPath>..\packages\MaterialDesignThemes.0.0.0.77\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="MonoTorrent">
       <HintPath>..\MonoTorrent\MonoTorrent.dll</HintPath>
     </Reference>
