@@ -33,6 +33,8 @@ open NicoExtensions
         let pathValues = Config.getPathValues()
         let allSettings = TorrentClient.setupSettings pathValues.DownloadsPath port
    
+        let getValidTorrents() =
+           
         let loadTorrents (paths:PathValues) torrentSettings (list: ResizeArray<TorrentManager>) =           
             Directory.GetFiles(paths.TorrentsPath, "*.torrent", SearchOption.TopDirectoryOnly) 
             |> Seq.map (fun torrentFile -> TorrentClient.createTorrentManager torrentSettings paths torrentFile)

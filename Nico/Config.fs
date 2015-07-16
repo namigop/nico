@@ -14,6 +14,7 @@ open NicoExtensions
 
 type PathValues =
     {
+        InternalPath :string
         BasePath : string
         TorrentsPath: string
         DownloadsPath:string
@@ -28,6 +29,7 @@ module Config =
 
     let rec getPathValues() =
         {
+            InternalPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nico-11-16-2009")
             BasePath = basePath()
             TorrentsPath = torrentsPath
             DownloadsPath = Path.Combine(basePath(), "Downloads")
@@ -41,6 +43,7 @@ module Config =
                 Directory.CreateDirectory(path) |> ignore
         create paths.DownloadsPath
         create paths.TorrentsPath
+        create paths.InternalPath
 
         
 type AllSettings =

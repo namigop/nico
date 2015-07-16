@@ -12,12 +12,6 @@ open System
 open System.Windows.Threading
 open System.Collections.ObjectModel
 
-type OverallStatus =
-    | Paused = 0
-    | Downloading = 1
-    | Seeding =2
-    | Others = 3
-
 type TorrentManagerItem(manager : TorrentManager, paths:PathValues, onToggled: obj -> unit) as this =
     inherit ViewModelBase()
     let mutable progress = 0.0

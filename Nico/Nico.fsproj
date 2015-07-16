@@ -66,13 +66,15 @@
     <Compile Include="Config.fs" />
     <Compile Include="ViewModelBase.fs" />
     <Compile Include="RelayCommand.fs" />
+    <Compile Include="OverallStatus.fs" />
     <Compile Include="ClientEngineItem.fs" />
     <Compile Include="TorrentFileItem.fs" />
+    <Compile Include="TorrentDownloadInfo.fs" />
     <Compile Include="TorrentManagerItem.fs" />
     <Compile Include="TorrentClient.fs" />
     <Resource Include="MainWindow.xaml" />
     <Compile Include="TorrentApp.fs" />
-    <Compile Include="MainWindow.fs" />
+    <Compile Include="MainWindowViewModel.fs" />
     <Resource Include="App.xaml" />
     <Compile Include="App..fs" />
   </ItemGroup>
@@ -123,6 +125,7 @@
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Serialization" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>

@@ -5,7 +5,7 @@
     xmlns:views="clr-namespace:Nico"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-    Title="{Binding Title}"
+    Title="Nico Torrent"
     Height="600" MinWidth="1200" Width="1200"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     Background="{DynamicResource MaterialDesignPaper}"
@@ -564,7 +564,7 @@
         </Grid>
         <StatusBar Grid.Row="2">
             <StatusBarItem HorizontalAlignment="Left">
-                <TextBlock Text="" />
+                <TextBlock Text="Copyright : Erik Araojo, 2015" />
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
                 <TextBlock Text="{Binding StatusMessage}" />
