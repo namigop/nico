@@ -15,7 +15,7 @@ open System.Collections.ObjectModel
 type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : TorrentManager, paths:PathValues, onToggled: obj -> unit) as this =
     inherit ViewModelBase()
     let mutable progress = Convert.ToDouble(xmlDownloadInfo.Progress)
-    let mutable peersHeader = ""
+    let mutable peersHeader = "Peers"
     let mutable downloadSpeed = ""
     let mutable downloadSizeMB = ""
     let mutable uploadSizeMB = ""
@@ -109,7 +109,7 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
    
     member x.FilesHeader = String.Format("Files ({0})", torrentFiles.Count)
     member x.PeersHeader 
-        with get () = peersStartWatchHeader
+        with get () = peersHeader
         and set v = this.RaiseAndSetIfChanged(&peersHeader, v, "PeersHeader")
    
     
@@ -118,8 +118,9 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
     member x.TorrentManager = manager
     member this.Name = manager.Torrent.Name
     // member this.Size = size
-    member this.() = 
-        xmlDownloadInfo.DownloadStartDate <- DateTime.Now      
+    member this.StartWatch() = 
+        if (xmlDownloadInfo.DownloadStartDate > DateTime.Now) then
+            xmlDownloadInfo.DownloadStartDate <- DateTime.Now      
         timer.Start()
     member this.StopWatch() = timer.Stop()
 

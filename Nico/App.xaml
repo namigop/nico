@@ -27,6 +27,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
 
+              
                 <!-- primary color -->
                 <!--
                 <ResourceDictionary>
@@ -89,6 +90,13 @@
                 </ResourceDictionary>-->
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <Style BasedOn="{StaticResource ToolbarButtonStyle}"  TargetType="Button">
+                <Style.Triggers >
+                    <Trigger Property="IsEnabled" Value="True">
+                        <Setter Property="Background" Value="Red" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
             <Style x:Key="NicoRadioButton" TargetType="RadioButton">
                 <Setter Property="Foreground" Value="{DynamicResource LabelTextBrush}" />
                 <Setter Property="FontSize" Value="{DynamicResource ContentFontSize}" />

@@ -70,7 +70,8 @@ type MainWindowViewModel() as this =
         |> Seq.map(fun (torrentInfo,mgr) -> TorrentManagerItem(torrentInfo, mgr, pathValues, fun todo -> () ))
         |> Seq.iter(fun item ->
              displayedTorrentManagers.Add item
-             item.StartWatch())
+             if (item.OverallStatus = OverallStatus.Downloading || item.OverallStatus = OverallStatus.Seeding) then
+                item.StartWatch())
 
     let loadedCommand =
         torrentApp.LoadTorrentFiles()       
@@ -126,6 +127,7 @@ type MainWindowViewModel() as this =
         let onRun (arg) =
             if Utils.isNotNull(selectedTorrentManager) then
                 torrentApp.Start selectedTorrentManager.TorrentManager
+                selectedTorrentManager.StartWatch()
         new RelayCommand((fun c -> Utils.isNotNull(selectedTorrentManager)), onRun)
     
     let moveTorrent (mgr:TorrentManagerItem) (getTargetPos : int -> int) (afterMove: TorrentManagerItem -> unit) =
