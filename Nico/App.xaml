@@ -90,7 +90,7 @@
                 </ResourceDictionary>-->
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-            <Style BasedOn="{StaticResource ToolbarButtonStyle}"  TargetType="Button">
+            <Style BasedOn="{StaticResource ToolBarButtonBaseStyle}"  TargetType="ButtonBase" x:Key="NicoToolBarButton">
                 <Style.Triggers >
                     <Trigger Property="IsEnabled" Value="True">
                         <Setter Property="Background" Value="Red" />

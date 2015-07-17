@@ -84,4 +84,5 @@ module TorrentClient =
                     mgr.Dispose()
 
             )
+        mgr.Stop()
     

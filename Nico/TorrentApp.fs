@@ -13,7 +13,7 @@ open MonoTorrent.Dht.Listeners
 open NicoExtensions
  
  type ITorrentApp =
-    abstract Register : TorrentManager -> unit
+    abstract Register : TorrentManager -> TorrentManager
     abstract AllTorrentCount : int
     abstract AllTorrentManagers : (TorrentDownloadInfo * TorrentManager) seq 
     abstract ActiveTorrentManagers :(TorrentDownloadInfo * TorrentManager) seq
@@ -65,7 +65,9 @@ open NicoExtensions
                     let xmlDownloadInfo = TorrentDownloadInfo(PhysicalTorrentFile = torrentFile)
                     allTorrentManagers.Add (xmlDownloadInfo,mgr)
                     mgr
-                member x.Register mgr = TorrentClient.register engine onPeersFound onPieceHashed onTorrentStateChanged onAnnounceComplete mgr
+                member x.Register mgr = 
+                    TorrentClient.register engine onPeersFound onPieceHashed onTorrentStateChanged onAnnounceComplete mgr
+                    mgr
                 member x.AllTorrentManagers = seq { for a in allTorrentManagers do yield a }
                 member x.Start mgr =  TorrentClient.start mgr
                    
@@ -92,7 +94,7 @@ open NicoExtensions
                     loadTorrents pathValues allSettings.TorrentDefault allTorrentManagers
                     allTorrentManagers 
                     |> Seq.iter (fun (info,mgr) ->
-                        x.Register mgr
+                        (x.Register mgr) |> ignore
                         match info.State with
                         | OverallStatus.Downloading | OverallStatus.Seeding -> mgr.Start()
                         | OverallStatus.Paused -> mgr.Pause()

@@ -11,6 +11,10 @@ open MonoTorrent.Dht.Listeners
 open System
 open System.Windows.Threading
 open System.Collections.ObjectModel
+open OxyPlot
+open OxyPlot.Annotations
+open OxyPlot.Axes
+open OxyPlot.Series
 
 type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : TorrentManager, paths:PathValues, onToggled: obj -> unit) as this =
     inherit ViewModelBase()
@@ -24,6 +28,7 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
     let mutable ratio = xmlDownloadInfo.Ratio
     let mutable selectedTabIndex = 0
     let mutable overallStatus = xmlDownloadInfo.State
+    let speedPlot = SpeedPlot.create()
    // let xmlDownloadInfo = TorrentDownloadInfo(PhysicalTorrentFile = physicalTorrentFile)
 
     let toggledCommand =      
@@ -59,8 +64,11 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
             | TorrentState.Paused -> OverallStatus.Paused
             | _ -> OverallStatus.Others
 
-        this.DownloadSpeed <- String.Format("{0:0.00} KB/s", Convert.ToDouble(manager.Monitor.DownloadSpeed) / 1024.0)
-        this.UploadSpeed <- String.Format("{0:0.00} KB/s", Convert.ToDouble(manager.Monitor.UploadSpeed) / 1024.0)
+        let downloadSpeedInKB = Convert.ToDouble(manager.Monitor.DownloadSpeed) / 1024.0;
+        let uploadSpeedInKB = Convert.ToDouble(manager.Monitor.UploadSpeed) / 1024.0;
+     
+        this.DownloadSpeed <- String.Format("{0:0.00} KB/s", downloadSpeedInKB)
+        this.UploadSpeed <- String.Format("{0:0.00} KB/s",  uploadSpeedInKB)
         this.DownloadSizeMB <- String.Format("{0:0.00} MB", Convert.ToDouble(manager.Monitor.DataBytesDownloaded) / (1024.0 * 1024.0))
         this.UploadSizeMB <- String.Format(" {0:0.00} MB", Convert.ToDouble(manager.Monitor.DataBytesUploaded) / (1024.0 * 1024.0))
         this.Ratio <-
@@ -97,7 +105,12 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
 
                         let counter = Convert.ToInt32(temp.Tag)
                         if (counter % 2 = 0) then
+                            let downloadSpeedInKB = Convert.ToDouble(manager.Monitor.DownloadSpeed) / 1024.0;
+                            let uploadSpeedInKB = Convert.ToDouble(manager.Monitor.UploadSpeed) / 1024.0;
+                            speedPlot.AddDownloadPerSecPoint(DatePoint(Y=downloadSpeedInKB))
+                            speedPlot.AddUploadPerSecPoint(DatePoint(Y=uploadSpeedInKB))
                             updateXmlInfo()
+
                         temp.Tag <- counter + 1
                          )
         temp
@@ -132,9 +145,12 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
         with get () = selectedTabIndex
         and set v = this.RaiseAndSetIfChanged(&selectedTabIndex, v, "SelectedTabIndex")
 
+
+    member x.SelectDetailsCommand = new RelayCommand((fun d -> true), fun _ -> this.SelectedTabIndex <- 2)
     member x.SelectFilesCommand = new RelayCommand((fun d -> true), fun _ -> this.SelectedTabIndex <- 0)
     member x.SelectPeersCommand = new RelayCommand((fun d -> true), fun _ -> this.SelectedTabIndex <- 1)
-
+    member x.DownloadPlotModel = speedPlot.DownloadModel
+    member x.UploadPlotModel = speedPlot.UploadModel
     member this.Progress
         with get () = progress
         and set v = this.RaiseAndSetIfChanged(&progress, v, "Progress")

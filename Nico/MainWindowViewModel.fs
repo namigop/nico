@@ -89,8 +89,10 @@ type MainWindowViewModel() as this =
                 let target = Path.Combine(pathValues.TorrentsPath, fileName)
                 if not (File.Exists target) then
                     File.Copy(torrent, target)
-                    let mgr = torrentApp.AddTorrentManager target
-                    torrentApp.Start mgr
+                    target
+                    |> torrentApp.AddTorrentManager 
+                    |> torrentApp.Register
+                    |> torrentApp.Start 
         new RelayCommand((fun c -> true), onRun)
 
     let selectActiveTorrentsCommand =
@@ -154,7 +156,7 @@ type MainWindowViewModel() as this =
                 selectedTorrentManager
                 (fun curPos ->  
                     let temp = curPos + 1
-                    if temp <= displayedTorrentManagers.Count then temp else curPos)
+                    if temp < displayedTorrentManagers.Count then temp else curPos)
                 (fun mgrItem -> mgrItem.TorrentManager.Torrent.Files.[0].Priority <- Priority.Normal) //TODO            
         new RelayCommand((fun c -> true), onRun)
 
