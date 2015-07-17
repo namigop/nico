@@ -67,16 +67,16 @@ type MainWindowViewModel() as this =
         displayedTorrentManagers |> Seq.iter (fun m -> m.StopWatch())
         displayedTorrentManagers.Clear()
         mgrs
-        |> Seq.map(fun mgr -> TorrentManagerItem(mgr, pathValues, fun todo -> () ))
+        |> Seq.map(fun (torrentInfo,mgr) -> TorrentManagerItem(torrentInfo, mgr, pathValues, fun todo -> () ))
         |> Seq.iter(fun item ->
              displayedTorrentManagers.Add item
              item.StartWatch())
 
     let loadedCommand =
-        torrentApp.LoadTorrentFiles()
-        torrentApp.AllTorrentManagers  |> Seq.iter (fun mgr ->  torrentApp.Start mgr)
+        torrentApp.LoadTorrentFiles()       
         showTorrentManagers torrentApp.AllTorrentManagers
-        refreshTimer.Start()
+        refreshTimer.Start() 
+        this.OnPropertyChanged("SelectedTorrentManager")
 
     let addTorrentCommand =
         let onRun (arg) =
@@ -118,18 +118,18 @@ type MainWindowViewModel() as this =
 
     let pauseTorrentCommand =
         let onRun (arg) =
-            if not (box selectedTorrentManager = null) then
-                selectedTorrentManager.TorrentManager.Pause()
-        new RelayCommand((fun c -> true), onRun)
+            if Utils.isNotNull(selectedTorrentManager) then
+                torrentApp.Pause selectedTorrentManager.TorrentManager               
+        new RelayCommand((fun c -> Utils.isNotNull(selectedTorrentManager)), onRun)
 
     let startTorrentCommand =
         let onRun (arg) =
-            if not (box selectedTorrentManager = null) then
+            if Utils.isNotNull(selectedTorrentManager) then
                 torrentApp.Start selectedTorrentManager.TorrentManager
-        new RelayCommand((fun c -> true), onRun)
+        new RelayCommand((fun c -> Utils.isNotNull(selectedTorrentManager)), onRun)
     
     let moveTorrent (mgr:TorrentManagerItem) (getTargetPos : int -> int) (afterMove: TorrentManagerItem -> unit) =
-        if not (box mgr = null) then
+        if Utils.isNotNull(mgr) then
             let curPos = displayedTorrentManagers.IndexOf(mgr)
             let targetPos =  getTargetPos curPos
             if displayedTorrentManagers.Remove(mgr) then
@@ -160,7 +160,7 @@ type MainWindowViewModel() as this =
         let onRun (arg) =
            let selected = selectedTorrentManager.TorrentManager
            torrentApp.Stop selectedTorrentManager.TorrentManager         
-        new RelayCommand((fun c -> true), onRun)
+        new RelayCommand((fun c -> Utils.isNotNull(selectedTorrentManager)), onRun)
         
  
     member x.MoveUpTorrentCommand = moveUpTorrentCommand
@@ -178,7 +178,11 @@ type MainWindowViewModel() as this =
 
     member this.SelectedTorrentManager
         with get () = selectedTorrentManager
-        and set v = this.RaiseAndSetIfChanged(&selectedTorrentManager, v, "SelectedTorrentManager")
+        and set v = 
+            this.RaiseAndSetIfChanged(&selectedTorrentManager, v, "SelectedTorrentManager")
+            this.PauseTorrentCommand.RaiseCanExecuteChanged()
+            this.StartTorrentCommand.RaiseCanExecuteChanged()
+            this.StopTorrentCommand.RaiseCanExecuteChanged()
     member this.Title
         with get () = title
         and set v = this.RaiseAndSetIfChanged(&title, v, "Title")

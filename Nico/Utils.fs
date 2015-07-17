@@ -48,7 +48,7 @@ module Utils =
                         rect,
                         BitmapSizeOptions.FromEmptyOptions());
 
-    
+    let isNotNull (item:obj) = not(item = null)
     let fileDeleteForced fileFullPath = 
         let info = new FileInfo(fileFullPath);
         if (info.Exists) then
@@ -66,7 +66,7 @@ module Utils =
                     for subDir in subDirs do
                         fileDeleteAll subDir recursv
 
-    let memoize f = 
+    let remember f = 
         let cache = Dictionary<_, _>()
         fun x -> 
             let ok,res = cache.TryGetValue(x)

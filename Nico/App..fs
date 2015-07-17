@@ -12,12 +12,12 @@ module main =
     [<EntryPoint>]
     let main argv =    
         let app = App()  
-        app.Root.Activated
-            |> Observable.add (fun arg -> 
-                let vm = app.Root.MainWindow.DataContext :?> MainWindowViewModel
-                app.Root.MainWindow.Closed |> Observable.add(fun w -> vm.Close() )
-                
-                ) |> ignore
+//        app.Root.Activated
+//            |> Observable.add (fun arg -> 
+//                let vm = app.Root.MainWindow.DataContext :?> MainWindowViewModel
+//                app.Root.MainWindow.Closed |> Observable.add(fun w -> vm.Close() )
+//                
+//                ) |> ignore
 
 
         Application.Current.DispatcherUnhandledException 
