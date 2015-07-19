@@ -15,6 +15,12 @@
     type MonoTorrent.InfoHash with
         member this.BEncodedHex() = BEncodedString(this.ToHex())
 
+    type System.Int32 with
+        member this.ToDouble() = Convert.ToDouble(this)
+ 
+    type System.Int64 with
+        member this.ToDouble() = Convert.ToDouble(this)
+
     type DependencyObject with
         member this.FindAncestor<'T when 'T :> DependencyObject>() = 
             let rec findAncestor(elem:DependencyObject) =

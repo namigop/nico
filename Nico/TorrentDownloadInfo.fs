@@ -22,7 +22,7 @@ type TorrentDownloadInfo() =
     let mutable bytesUploaded = 0L
     let mutable downloadStartDate = DateTime.MaxValue
     let mutable downloadDuration = TimeSpan.FromMinutes(0.0)
-    let mutable state = OverallStatus.Others
+    let mutable state = OverallStatus.Initializing
     let mutable physicalTorrentFile = ""
     let mutable progress = 0
 
@@ -53,6 +53,7 @@ type TorrentDownloadInfo() =
         let torrentXmlInfoFileName = Path.GetFileNameWithoutExtension(this.PhysicalTorrentFile) + TorrentDownloadInfo.Extension
         let target = Path.Combine(internalPath, torrentXmlInfoFileName)
         Utils.serialize<TorrentDownloadInfo>(this)
+        |> Utils.xmlPrettryPrintUTF8
         |> Utils.stringToFile target
 
 

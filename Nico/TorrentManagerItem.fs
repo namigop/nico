@@ -16,7 +16,7 @@ open OxyPlot.Annotations
 open OxyPlot.Axes
 open OxyPlot.Series
 
-type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : TorrentManager, paths:PathValues, onToggled: obj -> unit) as this =
+type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : TorrentManager, paths:PathValues) as this =
     inherit ViewModelBase()
     let mutable progress = Convert.ToDouble(xmlDownloadInfo.Progress)
     let mutable peersHeader = "Peers"
@@ -30,10 +30,7 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
     let mutable overallStatus = xmlDownloadInfo.State
     let speedPlot = SpeedPlot.create()
    // let xmlDownloadInfo = TorrentDownloadInfo(PhysicalTorrentFile = physicalTorrentFile)
-
-    let toggledCommand =      
-        new RelayCommand((fun c -> true), onToggled)
-        
+     
     let torrentFiles =
         let items = 
             manager.Torrent.Files 
@@ -42,8 +39,8 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
         new ObservableCollection<TorrentFileItem>(items)
 
     let updateXmlInfo() =
-        xmlDownloadInfo.BytesDownloaded <- manager.Monitor.DataBytesDownloaded
-        xmlDownloadInfo.BytesUploaded <- manager.Monitor.DataBytesUploaded
+        xmlDownloadInfo.BytesDownloaded <- xmlDownloadInfo.BytesDownloaded + manager.Monitor.DataBytesDownloaded
+        xmlDownloadInfo.BytesUploaded <-  xmlDownloadInfo.BytesUploaded + manager.Monitor.DataBytesUploaded
         xmlDownloadInfo.Progress <-Convert.ToInt32(manager.Progress)
         xmlDownloadInfo.DownloadDuration <-
             if xmlDownloadInfo.Progress < 100 then
@@ -62,8 +59,7 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
             | TorrentState.Downloading -> OverallStatus.Downloading
             | TorrentState.Seeding -> OverallStatus.Seeding
             | TorrentState.Paused -> OverallStatus.Paused
-            | _ -> OverallStatus.Others
-
+            | _ -> xmlDownloadInfo.State
         let downloadSpeedInKB = Convert.ToDouble(manager.Monitor.DownloadSpeed) / 1024.0;
         let uploadSpeedInKB = Convert.ToDouble(manager.Monitor.UploadSpeed) / 1024.0;
      
@@ -72,9 +68,9 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
         this.DownloadSizeMB <- String.Format("{0:0.00} MB", Convert.ToDouble(manager.Monitor.DataBytesDownloaded) / (1024.0 * 1024.0))
         this.UploadSizeMB <- String.Format(" {0:0.00} MB", Convert.ToDouble(manager.Monitor.DataBytesUploaded) / (1024.0 * 1024.0))
         this.Ratio <-
-            if manager.Monitor.DataBytesDownloaded > 0L then    
-                let uploaded = Convert.ToDouble(manager.Monitor.DataBytesUploaded)         
-                let downloaded = Convert.ToDouble(manager.Monitor.DataBytesDownloaded)                 
+            if  xmlDownloadInfo.BytesDownloaded > 0L && xmlDownloadInfo.BytesUploaded > 0L then    
+                let uploaded = xmlDownloadInfo.BytesDownloaded.ToDouble()        
+                let downloaded =  xmlDownloadInfo.BytesDownloaded.ToDouble()                
                 Math.Round(uploaded/downloaded, 3)
             else
                 0.0

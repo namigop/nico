@@ -66,8 +66,7 @@ type MainWindowViewModel() as this =
     let showTorrentManagers mgrs =
         displayedTorrentManagers |> Seq.iter (fun m -> m.StopWatch())
         displayedTorrentManagers.Clear()
-        mgrs
-        |> Seq.map(fun (torrentInfo,mgr) -> TorrentManagerItem(torrentInfo, mgr, pathValues, fun todo -> () ))
+        mgrs     
         |> Seq.iter(fun item ->
              displayedTorrentManagers.Add item
              if (item.OverallStatus = OverallStatus.Downloading || item.OverallStatus = OverallStatus.Seeding) then
@@ -93,7 +92,25 @@ type MainWindowViewModel() as this =
                     |> torrentApp.AddTorrentManager 
                     |> torrentApp.Register
                     |> torrentApp.Start 
+                showTorrentManagers torrentApp.ActiveTorrentManagers
         new RelayCommand((fun c -> true), onRun)
+
+    let RemoveTorrentCommand =
+        let onRun (arg) =
+            //show a folder browser dialog
+            let dg = OpenFileDialog(Filter="Torrent Files (*.torrent)|*.torrent", Multiselect = false)
+            if dg.ShowDialog().Value then
+                let torrent = dg.FileName 
+                let fileName = Path.GetFileName torrent
+                let target = Path.Combine(pathValues.TorrentsPath, fileName)
+                if not (File.Exists target) then
+                    File.Copy(torrent, target)
+                    target
+                    |> torrentApp.AddTorrentManager 
+                    |> torrentApp.Register
+                    |> torrentApp.Start 
+                showTorrentManagers torrentApp.ActiveTorrentManagers
+        new RelayCommand((fun c -> Utils.isNotNull(selectedTorrentManager)), onRun)
 
     let selectActiveTorrentsCommand =
         let onRun (arg) = showTorrentManagers torrentApp.ActiveTorrentManagers
@@ -122,13 +139,13 @@ type MainWindowViewModel() as this =
     let pauseTorrentCommand =
         let onRun (arg) =
             if Utils.isNotNull(selectedTorrentManager) then
-                torrentApp.Pause selectedTorrentManager.TorrentManager               
+                torrentApp.Pause selectedTorrentManager               
         new RelayCommand((fun c -> Utils.isNotNull(selectedTorrentManager)), onRun)
 
     let startTorrentCommand =
         let onRun (arg) =
             if Utils.isNotNull(selectedTorrentManager) then
-                torrentApp.Start selectedTorrentManager.TorrentManager
+                torrentApp.Start selectedTorrentManager
                 selectedTorrentManager.StartWatch()
         new RelayCommand((fun c -> Utils.isNotNull(selectedTorrentManager)), onRun)
     
@@ -162,8 +179,7 @@ type MainWindowViewModel() as this =
 
     let stopTorrentCommand =
         let onRun (arg) =
-           let selected = selectedTorrentManager.TorrentManager
-           torrentApp.Stop selectedTorrentManager.TorrentManager         
+           torrentApp.Stop selectedTorrentManager         
         new RelayCommand((fun c -> Utils.isNotNull(selectedTorrentManager)), onRun)
         
  

@@ -74,7 +74,7 @@ module SpeedPlot =
             temp
 
         let uploadPlotModel = createPlotModel "Upload Speed" uploadSpeedPerSecSeries
-        let downloadPlotModel = createPlotModel "Upload Speed" downloadSpeedPerSecSeries
+        let downloadPlotModel = createPlotModel "Download Speed" downloadSpeedPerSecSeries
 
         let plotWindow = TimeSpan.FromMinutes 30.0
 

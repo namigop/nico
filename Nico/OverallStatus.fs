@@ -4,6 +4,7 @@ type OverallStatus =
     | Paused = 0
     | Downloading = 1
     | Seeding =2
-    | Others = 3
+    | Completed =3
+    | Initializing = 4
 
 

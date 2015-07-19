@@ -73,7 +73,7 @@
                 <!--<TextBlock Text=" TORRENT" VerticalAlignment="Center" />-->
               </StackPanel>
             </Button>
-            <Button Margin="5">
+            <Button Margin="5" Command="{Binding RemoveTorrentCommand}">
               <StackPanel Orientation="Horizontal">
                 <Rectangle Width="16" Height="16" Fill="Firebrick" Opacity="0.75">
                   <Rectangle.OpacityMask>
@@ -222,12 +222,14 @@
           <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <DataGrid Grid.Row="1" ItemsSource="{Binding TorrentManagers}" AutoGenerateColumns="False" x:Name="grid" SelectedItem="{Binding SelectedTorrentManager}">
-          <i:Interaction.Triggers>
+        <DataGrid Grid.Row="1" ItemsSource="{Binding TorrentManagers}" 
+                    Style="{StaticResource AzureDataGrid}"
+                  AutoGenerateColumns="False" x:Name="grid" SelectedItem="{Binding SelectedTorrentManager}">
+          <!--<i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseDoubleClick">
               <i:InvokeCommandAction Command="{Binding RowClickCommand}" CommandParameter="{Binding ElementName=grid}" />
             </i:EventTrigger>
-          </i:Interaction.Triggers>
+          </i:Interaction.Triggers>-->
           <!-- Columns -->
           <DataGrid.Columns>
             <DataGridTemplateColumn Header=""  IsReadOnly="True" Width="5">
@@ -598,16 +600,7 @@
               </Grid>
             </DataTemplate>
           </DataGrid.RowDetailsTemplate>
-
-          <!--RowHeader Template-->
-          <DataGrid.RowHeaderTemplate>
-            <DataTemplate>
-              <StackPanel Width="20">
-                <TextBlock Text="1000" />
-                <ToggleButton Style="{StaticResource Foo}" x:Name="RowHeaderToggleButton" Command="{Binding ToggledCommand}" />
-              </StackPanel>
-            </DataTemplate>
-          </DataGrid.RowHeaderTemplate>
+ 
         </DataGrid>
       </Grid>
 
