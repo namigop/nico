@@ -90,6 +90,13 @@
                 </ResourceDictionary>-->
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <Style TargetType="ContextMenu">
+                <Style.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="12" />
+                    </Style>
+                </Style.Resources>
+            </Style>
             <Style BasedOn="{StaticResource ToolBarButtonBaseStyle}"  TargetType="ButtonBase" x:Key="NicoToolBarButton">
                 <Style.Triggers >
                     <Trigger Property="IsEnabled" Value="True">

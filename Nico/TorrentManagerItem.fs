@@ -15,6 +15,8 @@ open OxyPlot
 open OxyPlot.Annotations
 open OxyPlot.Axes
 open OxyPlot.Series
+open System.IO
+open System.Diagnostics
 
 type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : TorrentManager, paths:PathValues) as this =
     inherit ViewModelBase()
@@ -39,7 +41,14 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
         new ObservableCollection<TorrentFileItem>(items)
 
     let updateXmlInfo() =
-        xmlDownloadInfo.BytesDownloaded <- xmlDownloadInfo.BytesDownloaded + manager.Monitor.DataBytesDownloaded
+        System.Diagnostics.Debug.WriteLine("Manager Down : {0} KB" , manager.Monitor.DataBytesDownloaded.ToDouble()/1024.0)
+        System.Diagnostics.Debug.WriteLine("Manager Up : {0} KB" , manager.Monitor.DataBytesUploaded.ToDouble()/1024.0)
+        xmlDownloadInfo.BytesDownloaded <- 
+            if xmlDownloadInfo.BytesDownloaded > manager.Monitor.DataBytesDownloaded then
+                xmlDownloadInfo.BytesDownloaded 
+            else
+                manager.Monitor.DataBytesDownloaded
+
         xmlDownloadInfo.BytesUploaded <-  xmlDownloadInfo.BytesUploaded + manager.Monitor.DataBytesUploaded
         xmlDownloadInfo.Progress <-Convert.ToInt32(manager.Progress)
         xmlDownloadInfo.DownloadDuration <-
@@ -52,14 +61,22 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
         xmlDownloadInfo.Save(paths.InternalPath)
       
     let updateDownloadStat() =
-        this.Progress <- Math.Round(manager.Progress, 2)
+        this.Progress <-
+            let curProgress = Math.Round(manager.Progress, 2)
+            if curProgress < this.Progress then this.Progress else curProgress
+
         this.State <- manager.State.ToString()
         this.OverallStatus <-
             match manager.State with
             | TorrentState.Downloading -> OverallStatus.Downloading
             | TorrentState.Seeding -> OverallStatus.Seeding
             | TorrentState.Paused -> OverallStatus.Paused
-            | _ -> xmlDownloadInfo.State
+            | TorrentState.Stopped -> OverallStatus.Stopped
+            | _ ->
+                if (xmlDownloadInfo.Progress = 100) then
+                    OverallStatus.Completed
+                else
+                    xmlDownloadInfo.State
         let downloadSpeedInKB = Convert.ToDouble(manager.Monitor.DownloadSpeed) / 1024.0;
         let uploadSpeedInKB = Convert.ToDouble(manager.Monitor.UploadSpeed) / 1024.0;
      
@@ -79,7 +96,7 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
     let updatePeersStat() =
         let peers = manager.GetPeers()
         this.PeersHeader <- String.Format("Peers ({0})", peers.Count)
-        for p in peers do
+        for p in peers do          
             let getPeer(p2:PeerId) =
                 allPeers |> Seq.tryFind (fun p -> p.PeerID = p2.PeerID)
             match getPeer p with
@@ -110,7 +127,17 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
                         temp.Tag <- counter + 1
                          )
         temp
+        
+    let openInExplorerCommand =
+        let onRun (arg) =
+            torrentFiles 
+            |> Seq.head
+            |> fun t -> 
+                let downloadedAt = Path.GetDirectoryName(t.FileFullPath)
+                Process.Start("explorer.exe", downloadedAt) |> ignore
+        new RelayCommand((fun c -> true), onRun)
 
+    member this.OpenInExplorerCommand = openInExplorerCommand
     member x.TorrentXmlInfo = xmlDownloadInfo
     member x.OverallStatus 
         with get () = overallStatus

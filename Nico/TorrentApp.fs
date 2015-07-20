@@ -74,6 +74,7 @@ open NicoExtensions
                 member x.Start mgr =  
                     TorrentClient.start mgr.TorrentManager
                     mgr.TorrentXmlInfo.Save(pathValues.InternalPath)
+                    mgr.StartWatch()
                      
                 member x.SeedingTorrentManagers = 
                     x.AllTorrentManagers 

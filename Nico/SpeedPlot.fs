@@ -76,7 +76,7 @@ module SpeedPlot =
         let uploadPlotModel = createPlotModel "Upload Speed" uploadSpeedPerSecSeries
         let downloadPlotModel = createPlotModel "Download Speed" downloadSpeedPerSecSeries
 
-        let plotWindow = TimeSpan.FromMinutes 30.0
+        let plotWindow = TimeSpan.FromMinutes 15.0
 
         let rec tryRemoveExtra (window:TimeSpan) (points:ResizeArray<DatePoint>) =
             let first = Seq.head points

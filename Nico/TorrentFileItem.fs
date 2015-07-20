@@ -12,6 +12,7 @@ open System
 open System.Windows.Threading
 open System.IO
 open System.Collections.ObjectModel
+open System.Diagnostics
 
 type TorrentFileItem(torFile : TorrentFile, downloadPath) =
     inherit ViewModelBase()
@@ -29,6 +30,14 @@ type TorrentFileItem(torFile : TorrentFile, downloadPath) =
         temp.Add(Priority.Lowest)
         temp.Add(Priority.DoNotDownload)
         temp
+
+    let openInExplorerCommand =
+        let onRun (arg) =
+            let downloadedAt = Path.GetDirectoryName(torFile.FullPath)
+            Process.Start("explorer.exe", downloadedAt) |> ignore
+        new RelayCommand((fun c -> true), onRun)
+
+    member this.OpenInExplorerCommand = openInExplorerCommand
     member this.Image = image
     member this.UpdateProgress() =
         this.Progress <- Math.Round(torFile.BitField.PercentComplete,2)
@@ -37,7 +46,9 @@ type TorrentFileItem(torFile : TorrentFile, downloadPath) =
         and set v = this.RaiseAndSetIfChanged(&progress, v, "Progress")
 
     member this.FileName = fileName
+    member this.FileFullPath = torFile.FullPath
 
+   
     member this.Priorities = priorities
     member this.Priority
         with get () = priority
