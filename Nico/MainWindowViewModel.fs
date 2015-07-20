@@ -25,6 +25,12 @@ open Microsoft.Win32
 
 type MainWindow = XAML< "MainWindow.xaml", true >
 
+type MainViewDisplay =
+| All = 0
+| Active =1
+| Seeding = 2
+| Paused =3
+
 type MainWindowViewModel() as this =
     inherit ViewModelBase()
     do Config.createPaths (Config.getPathValues())
@@ -37,6 +43,7 @@ type MainWindowViewModel() as this =
     let pathValues = Config.getPathValues()
     let mutable port = 6746
     let mutable selectedTorrentManager = Unchecked.defaultof<TorrentManagerItem>
+    let mutable mainViewDisplay = MainViewDisplay.All
 
     let allSettings = TorrentClient.setupSettings pathValues.DownloadsPath port
 
@@ -51,18 +58,6 @@ type MainWindowViewModel() as this =
     let clientEngineItem = ClientEngineItem(torrentApp.Engine)
     let displayedTorrentManagers = ObservableCollection<TorrentManagerItem>()
 
-    let refreshTimer =
-        let temp = DispatcherTimer()
-        temp.Interval <- TimeSpan.FromMilliseconds(500.0)
-        temp.Tick |> Observable.add (fun arg ->
-                        this.OnPropertyChanged("StatusMessage")
-                        if (torrentApp.AllTorrentCount > 0) then
-                            this.AllTorrentsHeader <- String.Format("All ({0})", torrentApp.AllTorrentCount)
-                            this.PausedTorrentsHeader <- String.Format("Paused ({0})", torrentApp.PausedTorrentManagers |> Seq.length)
-                            this.SeedingTorrentsHeader <- String.Format("Seeding ({0})", torrentApp.SeedingTorrentManagers |> Seq.length)
-                            this.DownloadingTorrentsHeader <- String.Format("Active ({0})", torrentApp.ActiveTorrentManagers |> Seq.length))
-        temp
-
     let showTorrentManagers mgrs =
         displayedTorrentManagers |> Seq.iter (fun m -> m.StopWatch())
         displayedTorrentManagers.Clear()
@@ -71,6 +66,29 @@ type MainWindowViewModel() as this =
              displayedTorrentManagers.Add item
              if (item.OverallStatus = OverallStatus.Downloading || item.OverallStatus = OverallStatus.Seeding) then
                 item.StartWatch())
+
+    let refreshTimer =
+        let temp = DispatcherTimer()
+        temp.Interval <- TimeSpan.FromMilliseconds(500.0)
+        temp.Tick |> Observable.add (fun arg ->
+                        this.OnPropertyChanged("StatusMessage")
+                        let tryUpdateDisplay()  =
+                            let updateUI mgrs = 
+                                if not((mgrs |> Seq.length) = displayedTorrentManagers.Count) then
+                                    showTorrentManagers mgrs
+                            match mainViewDisplay with
+                            | MainViewDisplay.Active -> updateUI torrentApp.ActiveTorrentManagers
+                            | MainViewDisplay.Seeding -> updateUI torrentApp.SeedingTorrentManagers
+                            | MainViewDisplay.Paused -> updateUI torrentApp.PausedTorrentManagers
+                            | _ -> updateUI torrentApp.AllTorrentManagers
+
+                        if (torrentApp.AllTorrentCount > 0) then
+                            this.AllTorrentsHeader <- String.Format("All ({0})", torrentApp.AllTorrentCount)
+                            this.PausedTorrentsHeader <- String.Format("Paused ({0})", torrentApp.PausedTorrentManagers |> Seq.length)
+                            this.SeedingTorrentsHeader <- String.Format("Seeding ({0})", torrentApp.SeedingTorrentManagers |> Seq.length)
+                            this.DownloadingTorrentsHeader <- String.Format("Active ({0})", torrentApp.ActiveTorrentManagers |> Seq.length)
+                            tryUpdateDisplay())
+        temp
 
     let loadedCommand =
         torrentApp.LoadTorrentFiles()       
@@ -92,10 +110,11 @@ type MainWindowViewModel() as this =
                     |> torrentApp.AddTorrentManager 
                     |> torrentApp.Register
                     |> torrentApp.Start 
+
                 showTorrentManagers torrentApp.ActiveTorrentManagers
         new RelayCommand((fun c -> true), onRun)
 
-    let RemoveTorrentCommand =
+    let removeTorrentCommand =
         let onRun (arg) =
             //show a folder browser dialog
             let dg = OpenFileDialog(Filter="Torrent Files (*.torrent)|*.torrent", Multiselect = false)
@@ -113,19 +132,27 @@ type MainWindowViewModel() as this =
         new RelayCommand((fun c -> Utils.isNotNull(selectedTorrentManager)), onRun)
 
     let selectActiveTorrentsCommand =
-        let onRun (arg) = showTorrentManagers torrentApp.ActiveTorrentManagers
+        let onRun (arg) = 
+            showTorrentManagers torrentApp.ActiveTorrentManagers
+            mainViewDisplay <- MainViewDisplay.Active
         new RelayCommand((fun c -> true), onRun)
 
     let selectSeedingTorrentsCommand =
-        let onRun (arg) = showTorrentManagers torrentApp.SeedingTorrentManagers
+        let onRun (arg) = 
+            showTorrentManagers torrentApp.SeedingTorrentManagers
+            mainViewDisplay <- MainViewDisplay.Seeding
         new RelayCommand((fun c -> true), onRun)
 
     let selectPausedTorrentsCommand =
-        let onRun (arg) = showTorrentManagers torrentApp.PausedTorrentManagers
+        let onRun (arg) = 
+            showTorrentManagers torrentApp.PausedTorrentManagers
+            mainViewDisplay <- MainViewDisplay.Paused
         new RelayCommand((fun c -> true), onRun)
 
     let selectAllTorrentsCommand =
-        let onRun (arg) = showTorrentManagers torrentApp.AllTorrentManagers
+        let onRun (arg) = 
+            showTorrentManagers torrentApp.AllTorrentManagers
+            mainViewDisplay <- MainViewDisplay.All
         new RelayCommand((fun c -> true), onRun)
 
     let rowClickCommand =

@@ -72,6 +72,7 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
             | TorrentState.Seeding -> OverallStatus.Seeding
             | TorrentState.Paused -> OverallStatus.Paused
             | TorrentState.Stopped -> OverallStatus.Stopped
+            | TorrentState.Error -> OverallStatus.Error
             | _ ->
                 if (xmlDownloadInfo.Progress = 100) then
                     OverallStatus.Completed

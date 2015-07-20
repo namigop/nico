@@ -7,5 +7,6 @@ type OverallStatus =
     | Completed =3
     | Stopped = 4
     | Initializing = 5
+    | Error = 6
 
 
