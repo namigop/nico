@@ -2,6 +2,7 @@
 
 open FsXaml
 open NicoExtensions
+open MonoTorrent
 open MonoTorrent.BEncoding
 open MonoTorrent.Client
 open MonoTorrent.Client.Encryption
@@ -95,6 +96,21 @@ type MainWindowViewModel() as this =
         showTorrentManagers torrentApp.AllTorrentManagers
         refreshTimer.Start() 
         this.OnPropertyChanged("SelectedTorrentManager")
+
+    let addMagnetLinkCommand =
+        let onRun (arg) =
+             let svc = MagnetLinkService.create ""
+             
+             let mg = new MagnetLink(svc.GetLink())
+             let torFile = Path.Combine(pathValues.InternalPath, "foo.torrent")
+             let mgr = new TorrentManager(mg, pathValues.DownloadsPath, allSettings.TorrentDefault, torFile)
+             TorrentManagerItem(TorrentDownloadInfo(PhysicalTorrentFile = torFile), mgr, pathValues)
+             |> torrentApp.Register
+             |> torrentApp.Start
+            
+             ()
+             //showTorrentManagers torrentApp.ActiveTorrentManagers
+        new RelayCommand((fun c -> true), onRun)
 
     let addTorrentCommand =
         let onRun (arg) =
@@ -210,6 +226,7 @@ type MainWindowViewModel() as this =
         new RelayCommand((fun c -> Utils.isNotNull(selectedTorrentManager)), onRun)
         
  
+    member x.AddMagnetLinkCommand = addMagnetLinkCommand
     member x.MoveUpTorrentCommand = moveUpTorrentCommand
     member x.MoveDownTorrentCommand = moveDownTorrentCommand
     member x.PauseTorrentCommand = pauseTorrentCommand
@@ -230,6 +247,7 @@ type MainWindowViewModel() as this =
             this.PauseTorrentCommand.RaiseCanExecuteChanged()
             this.StartTorrentCommand.RaiseCanExecuteChanged()
             this.StopTorrentCommand.RaiseCanExecuteChanged()
+  
     member this.Title
         with get () = title
         and set v = this.RaiseAndSetIfChanged(&title, v, "Title")

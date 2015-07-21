@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Nico</RootNamespace>
     <AssemblyName>Nico</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.3.1.0</TargetFSharpCoreVersion>
     <Name>Nico</Name>
@@ -74,6 +74,8 @@
     <Compile Include="TorrentDownloadInfo.fs" />
     <Compile Include="TorrentManagerItem.fs" />
     <Compile Include="TorrentClient.fs" />
+    <Resource Include="AddMagnetLinkWindow.xaml" />
+    <Compile Include="AddMagnetLinkWindowViewModel.fs" />
     <Resource Include="MainWindow.xaml" />
     <Compile Include="TorrentApp.fs" />
     <Compile Include="MainWindowViewModel.fs" />
@@ -81,6 +83,7 @@
     <Compile Include="App..fs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FSharp.Data.TypeProviders" />
     <Reference Include="FsXaml.Wpf">
       <HintPath>..\packages\FsXaml.Wpf.0.9.9\lib\net45\FsXaml.Wpf.dll</HintPath>
       <Private>True</Private>
@@ -132,6 +135,8 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Interactivity">

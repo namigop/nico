@@ -63,7 +63,7 @@
             <ToolBarPanel>
                 <Grid>
                     <ToolBar>
-                        <Button Command="{Binding AddTorrentCommand}" Margin="5" Style="{StaticResource NicoToolBarButton}">
+                        <Button Command="{Binding AddTorrentCommand}" Margin="5" Style="{StaticResource NicoToolBarButton}" ToolTip="Add a torrent file">
                             <StackPanel Orientation="Horizontal">
                                 <Rectangle Width="16" Height="16" Fill="Green">
                                     <Rectangle.OpacityMask>
@@ -73,7 +73,17 @@
                                 <!--<TextBlock Text=" TORRENT" VerticalAlignment="Center" />-->
                             </StackPanel>
                         </Button>
-                        <Button Margin="5" Command="{Binding RemoveTorrentCommand}">
+                        <Button Command="{Binding AddMagnetLinkCommand}" Margin="5" Style="{StaticResource NicoToolBarButton}" ToolTip="Add a magnet link">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="16" Height="16" Fill="Green">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_cloud_add}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <!--<TextBlock Text=" TORRENT" VerticalAlignment="Center" />-->
+                            </StackPanel>
+                        </Button>
+                        <Button Margin="5" Command="{Binding RemoveTorrentCommand}" ToolTip="Remove the torrent">
                             <StackPanel Orientation="Horizontal">
                                 <Rectangle Width="16" Height="16" Fill="Firebrick" Opacity="0.75">
                                     <Rectangle.OpacityMask>

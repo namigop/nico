@@ -1,0 +1,45 @@
+﻿<controls:MetroWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:viewmodels="clr-namespace:Nico;assembly=Nico"
+    xmlns:views="clr-namespace:Nico"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
+    Title="Add magnet link"
+    
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    Background="{DynamicResource MaterialDesignPaper}"
+    Style="{DynamicResource CleanWindowStyleKey}"
+    GlowBrush="{DynamicResource AccentColorBrush}"
+  >
+
+    <Window.DataContext>
+        <viewmodels:AddMagnetLinkWindowViewModel />
+    </Window.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+     
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />            
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="Magnet link" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding MagnetUrl}" Grid.Column="1"/>
+        <TextBlock Text="Magnet link" Grid.Row="1"  VerticalAlignment="Center"/>
+        <TextBox Text="{Binding DownloadPath}" Grid.Row="1" Grid.Column="1"/>
+
+        <Button Content="OK" Command="{Binding OkCommand}" Grid.Row="2" />
+
+
+    </Grid>
+</controls:MetroWindow>
