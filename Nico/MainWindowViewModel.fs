@@ -99,16 +99,13 @@ type MainWindowViewModel() as this =
 
     let addMagnetLinkCommand =
         let onRun (arg) =
-             let svc = MagnetLinkService.create ""
-             
-             let mg = new MagnetLink(svc.GetLink())
-             let torFile = Path.Combine(pathValues.InternalPath, "foo.torrent")
-             let mgr = new TorrentManager(mg, pathValues.DownloadsPath, allSettings.TorrentDefault, torFile)
-             TorrentManagerItem(TorrentDownloadInfo(PhysicalTorrentFile = torFile), mgr, pathValues)
-             |> torrentApp.Register
-             |> torrentApp.Start
+            let svc = MagnetLinkService.create ""
+            svc.GetLink()
+            |> torrentApp.AddTorrentManagerFromMagnet             
+            |> torrentApp.Register
+            |> torrentApp.Start
             
-             ()
+            ()
              //showTorrentManagers torrentApp.ActiveTorrentManagers
         new RelayCommand((fun c -> true), onRun)
 

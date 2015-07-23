@@ -14,6 +14,8 @@ open NicoExtensions
  
 
 module TorrentClient =
+    open MonoTorrent
+
     let setupSettings downloadPath port =
         let engineSettings =
             let temp = EngineSettings(downloadPath, port)
@@ -49,6 +51,11 @@ module TorrentClient =
         dhtListner.Start();
         engine.DhtEngine.Start(nodes);
         engine
+        
+    let createTorrentManagerFromMagnet  torrentSettings (pathValues:PathValues) (magnetLink:MagnetLink) =
+        //let torFile = Path.Combine(pathValues.InternalPath, "foo.torrent")
+        let mgr = new TorrentManager(magnetLink, pathValues.DownloadsPath, torrentSettings, pathValues.TorrentsPath)
+        mgr
 
     let createTorrentManager  torrentSettings (pathValues:PathValues) (torrentFile:string) =
         let  fastResume =

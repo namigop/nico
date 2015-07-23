@@ -25,9 +25,15 @@ type TorrentDownloadInfo() =
     let mutable state = OverallStatus.Initializing
     let mutable physicalTorrentFile = ""
     let mutable progress = 0
+    let mutable magnetLink = ""
 
     static member Extension = ".tor.xml"
-    member this.PhysicalTorrentFile with get() = physicalTorrentFile and set v = physicalTorrentFile <- v
+    member this.PhysicalTorrentFile 
+        with get() = physicalTorrentFile 
+        and set v = 
+            physicalTorrentFile <- v
+            magnetLink <- ""
+
     member this.Progress with get() = progress and set v = progress <- v
     
     member this.Name with get() = Path.GetFileName(this.PhysicalTorrentFile)
@@ -39,12 +45,22 @@ type TorrentDownloadInfo() =
     member this.DownloadStartDate with get() = downloadStartDate and set v = downloadStartDate <- v
 
     member this.DownloadDuration with get() = downloadDuration and set v = downloadDuration <- v
+ 
+    member this.MagnetLink 
+        with get() = magnetLink 
+        and set v = 
+            magnetLink <- v
+            physicalTorrentFile <- ""
 
     member this.State with get() = state and set v = state <- v
 
     member this.Ratio = Math.Round(Convert.ToDouble(this.BytesUploaded)/Convert.ToDouble(this.BytesDownloaded), 3)
 
-    member this.IsValid = File.Exists(this.PhysicalTorrentFile) && File.OpenRead(this.PhysicalTorrentFile).Length > 0L  
+    member this.IsValid = 
+        if (String.IsNullOrWhiteSpace(magnetLink)) then
+            File.Exists(this.PhysicalTorrentFile) && File.OpenRead(this.PhysicalTorrentFile).Length > 0L  
+        else
+            magnetLink.StartsWith("magnet")
     
     member this.Save(internalPath:string) =
         if not (Directory.Exists(internalPath)) then

@@ -33,12 +33,20 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
     let speedPlot = SpeedPlot.create()
    // let xmlDownloadInfo = TorrentDownloadInfo(PhysicalTorrentFile = physicalTorrentFile)
      
-    let torrentFiles =
-        let items = 
-            manager.Torrent.Files 
-            |> Seq.sortBy (fun t -> t.FullPath)
-            |> Seq.map (fun f -> TorrentFileItem(f,paths.DownloadsPath))
-        new ObservableCollection<TorrentFileItem>(items)
+    let torrentFiles =    new ObservableCollection<TorrentFileItem>()
+     
+    let getTorrentFiles() =
+        if (Utils.isNotNull manager.Torrent) && not(manager.Torrent.Files.Length = torrentFiles.Count) then
+            let items = 
+                manager.Torrent.Files 
+                |> Seq.sortBy (fun t -> t.FullPath)
+                |> Seq.map (fun f -> TorrentFileItem(f,paths.DownloadsPath))
+        
+            if (Seq.length items) > 0 then
+                torrentFiles.Clear()
+                items |> Seq.iter(fun t -> torrentFiles.Add t)
+
+        
 
     let updateXmlInfo() =
         System.Diagnostics.Debug.WriteLine("Manager Down : {0} KB" , manager.Monitor.DataBytesDownloaded.ToDouble()/1024.0)
@@ -113,7 +121,7 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
         temp.Tick |> Observable.add (fun arg ->
                         updateDownloadStat()                       
                         updatePeersStat()
-                        
+                        getTorrentFiles()
                         for t in torrentFiles do
                            t.UpdateProgress()
 

@@ -23,10 +23,12 @@ open NicoExtensions
     abstract LoadTorrentFiles : (unit) -> unit
     abstract Engine : ClientEngine
     abstract AddTorrentManager : string -> TorrentManagerItem
+    abstract AddTorrentManagerFromMagnet : string -> TorrentManagerItem
     abstract Stop : TorrentManagerItem -> unit
     abstract Pause :TorrentManagerItem -> unit
 
  module TorrentApp =
+    open MonoTorrent
     
     let create port onPeersFound onPieceHashed onTorrentStateChanged onAnnounceComplete =
         
@@ -64,6 +66,13 @@ open NicoExtensions
                 member x.AddTorrentManager torrentFile = 
                     let mgr = TorrentClient.createTorrentManager allSettings.TorrentDefault pathValues torrentFile
                     let xmlDownloadInfo = TorrentDownloadInfo(PhysicalTorrentFile = torrentFile)
+                    let mgrItem = TorrentManagerItem(xmlDownloadInfo, mgr, pathValues)
+                    allTorrentManagers.Add (mgrItem)
+                    mgrItem
+                member x.AddTorrentManagerFromMagnet magnetLinkUrl =
+                    let magnetLink = new MagnetLink(magnetLinkUrl)
+                    let mgr = TorrentClient.createTorrentManagerFromMagnet allSettings.TorrentDefault pathValues magnetLink
+                    let xmlDownloadInfo = TorrentDownloadInfo(MagnetLink = magnetLinkUrl)
                     let mgrItem = TorrentManagerItem(xmlDownloadInfo, mgr, pathValues)
                     allTorrentManagers.Add (mgrItem)
                     mgrItem
