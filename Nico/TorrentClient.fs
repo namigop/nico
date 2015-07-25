@@ -11,11 +11,10 @@ open MonoTorrent.Common
 open MonoTorrent.Dht
 open MonoTorrent.Dht.Listeners
 open NicoExtensions
- 
+open MonoTorrent
 
 module TorrentClient =
-    open MonoTorrent
-
+   
     let setupSettings downloadPath port =
         let engineSettings =
             let temp = EngineSettings(downloadPath, port)

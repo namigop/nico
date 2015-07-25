@@ -79,7 +79,9 @@ type TorrentDownloadInfo() =
         if not (Directory.Exists(internalPath)) then
             (Directory.CreateDirectory internalPath) |> ignore
         
-        let torrentXmlInfoFileName = Path.GetFileNameWithoutExtension(this.PhysicalTorrentFile) + TorrentDownloadInfo.Extension
+        let name = Path.GetFileNameWithoutExtension(this.Name) 
+            
+        let torrentXmlInfoFileName = name + TorrentDownloadInfo.Extension
         let target = Path.Combine(internalPath, torrentXmlInfoFileName)
         Utils.serialize<TorrentDownloadInfo>(this)
         |> Utils.xmlPrettryPrintUTF8

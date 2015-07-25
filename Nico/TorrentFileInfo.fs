@@ -21,7 +21,7 @@ type TorrentFileInfo(fullpath1, priority1, progress1, sizeInMBytes1) =
     let mutable progress = progress1
     let mutable sizeInMBytes = sizeInMBytes1
 
-    new() = TorrentFileInfo("", TorrentPriority.Normal, 0.0, 0.0)
+    new() = TorrentFileInfo("", TorrentPriority.Normal, 0.0, 0.0<MB>)
 
     member this.FullPath with get() = fullpath and set v = fullpath <- v
     member this.Priority with get() = priority and set v = priority <- v

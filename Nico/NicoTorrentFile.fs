@@ -4,9 +4,7 @@ open System
 open MonoTorrent.Common
 open MonoTorrent
 open NicoExtensions
-
-//megabyte
-[<Measure>] type MB
+open System.IO
 
 type INicoTorrentFile =
     abstract FileName : string
@@ -16,7 +14,7 @@ type INicoTorrentFile =
     abstract SizeInMB : float<MB>
 
 module NicoTorrentFile =
-    let create (torFile:TorrentFile) = 
+    let createFromTorFile (torFile:TorrentFile) = 
         {
             new INicoTorrentFile with
                 member this.FileName = torFile.Path
@@ -26,3 +24,12 @@ module NicoTorrentFile =
                 member this.SizeInMB = Math.Round(Convert.ToDouble(torFile.Length) / (1024.0 * 1024.0), 2) * 1.0<MB>
         }
 
+    let createFromTorFileInfo(info:TorrentFileInfo) =
+        {
+            new INicoTorrentFile with
+                member this.FileName = Path.GetFileName info.FullPath
+                member this.Priority = info.Priority
+                member this.FullPath = info.FullPath
+                member this.Progress = info.Progress
+                member this.SizeInMB = info.SizeInMBytes
+        }

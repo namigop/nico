@@ -35,12 +35,12 @@ type TorrentManagerViewModel( xmlDownloadInfo :TorrentDownloadInfo, manager : To
     let torrentFiles =    new ObservableCollection<TorrentFileViewModel>()
      
     let getTorrentFiles() =            
-        xmlDownloadInfo.Files
+        
         if (Utils.isNotNull manager.Torrent) && not(manager.Torrent.Files.Length = torrentFiles.Count) then
             let items = 
                 manager.Torrent.Files 
                 |> Seq.sortBy (fun t -> t.FullPath)
-                |> Seq.map (fun f -> TorrentFileViewModel((NicoTorrentFile.create f),paths.DownloadsPath))
+                |> Seq.map (fun f -> TorrentFileViewModel((NicoTorrentFile.createFromTorFile f),paths.DownloadsPath))
         
             if (Seq.length items) > 0 then
                 torrentFiles.Clear()
