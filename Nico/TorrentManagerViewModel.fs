@@ -10,6 +10,7 @@ open MonoTorrent.Dht
 open MonoTorrent.Dht.Listeners
 open System
 open System.Windows.Threading
+open System.Collections.Generic
 open System.Collections.ObjectModel
 open OxyPlot
 open OxyPlot.Annotations
@@ -42,21 +43,33 @@ type TorrentManagerViewModel( xmlDownloadInfo :TorrentDownloadInfo, manager : To
                 items |> Seq.iter(fun t -> torrentFiles.Add t)
         
     let updateFiles() =
-        if (Utils.isNotNull manager.Torrent) && not(manager.Torrent.Files.Length = torrentFiles.Count) then
-            let items = 
-                manager.Torrent.Files 
-                |> Seq.sortBy (fun t -> t.FullPath)
-                |> Seq.map (fun f -> NicoTorrentFile.createFromTorFile f)
-                |> Seq.map (fun fileInfo -> TorrentFileInfo(fileInfo.FullPath, fileInfo.Priority, fileInfo.Progress, fileInfo.SizeInMB))
+        if (Utils.isNotNull manager.Torrent) then
+            if not(String.IsNullOrWhiteSpace(xmlDownloadInfo.PhysicalTorrentFile)) && not (File.Exists xmlDownloadInfo.PhysicalTorrentFile) then
+                ()foomagnet
+            xmlDownloadInfo.PhysicalTorrentFile <- Path.Combine(manager.Torrent.TorrentPath, manager.Torrent.Name)
+            if not(manager.Torrent.Files.Length = torrentFiles.Count) then
+                let items = 
+                    manager.Torrent.Files 
+                    |> Seq.sortBy (fun t -> t.FullPath)
+                    |> Seq.map (fun f -> NicoTorrentFile.createFromTorFile f)
+                    |> Seq.map (fun fileInfo -> TorrentFileInfo(fileInfo.FullPath, fileInfo.Priority, fileInfo.Progress, fileInfo.SizeInMB))
         
-            if (Seq.length items) > 0 then
-                xmlDownloadInfo.Files.Clear()
-                xmlDownloadInfo.Files.AddRange items
+                if (Seq.length items) > 0 then
+                    xmlDownloadInfo.Files.Clear()
+                    xmlDownloadInfo.Files.AddRange items
+            else
+                //Update the progress
+                let keyPairs = 
+                    manager.Torrent.Files 
+                    |> Seq.fold (fun (acc:Dictionary<string, float>) i -> 
+                        let path:string = i.Path
+                        acc.[path] <- 0.0
+                        acc ) (Dictionary<string, float>())
+                for f in xmlDownloadInfo.Files do
+                    f.Progress <- keyPairs.[Path.GetFileName(f.FullPath)]
 
 
     let updateXmlInfo() =
-        //System.Diagnostics.Debug.WriteLine("Manager Down : {0} KB" , manager.Monitor.DataBytesDownloaded.ToDouble()/1024.0)
-        //System.Diagnostics.Debug.WriteLine("Manager Up : {0} KB" , manager.Monitor.DataBytesUploaded.ToDouble()/1024.0)
         xmlDownloadInfo.BytesDownloaded <- 
             if xmlDownloadInfo.BytesDownloaded > manager.Monitor.DataBytesDownloaded then
                 xmlDownloadInfo.BytesDownloaded 
@@ -102,7 +115,7 @@ type TorrentManagerViewModel( xmlDownloadInfo :TorrentDownloadInfo, manager : To
         this.UploadSizeMB <- String.Format(" {0:0.00} MB", Convert.ToDouble(manager.Monitor.DataBytesUploaded) / (1024.0 * 1024.0))
         this.Ratio <-
             if  xmlDownloadInfo.BytesDownloaded > 0L && xmlDownloadInfo.BytesUploaded > 0L then    
-                let uploaded = xmlDownloadInfo.BytesDownloaded.ToDouble()        
+                let uploaded = xmlDownloadInfo.BytesUploaded.ToDouble()        
                 let downloaded =  xmlDownloadInfo.BytesDownloaded.ToDouble()                
                 Math.Round(uploaded/downloaded, 3)
             else
@@ -119,29 +132,28 @@ type TorrentManagerViewModel( xmlDownloadInfo :TorrentDownloadInfo, manager : To
             | Some(p3) -> ()
             | None -> allPeers.Add(p)
  
-   
     let timer =
         let finalInterval = TimeSpan.FromMilliseconds(750.0)
         let temp = DispatcherTimer(Tag = 0)
 
-        temp.Interval <- TimeSpan.FromMilliseconds(100.0)
-        temp.Tick |> Observable.add (fun arg ->
-                        updateDownloadStat()                       
-                        updatePeersStat()                     
-                        for t in torrentFiles do
-                           t.UpdateProgress()
+        temp.Interval <- TimeSpan.FromMilliseconds(100.0) 
+        temp.Tick 
+            |> Observable.add (fun arg ->
+                updateDownloadStat()                       
+                updatePeersStat()                     
+                for t in torrentFiles do
+                    t.UpdateProgress()
 
-                        let counter = Convert.ToInt32(temp.Tag)
-                        if (counter % 2 = 0) then
-                            let downloadSpeedInKB = Convert.ToDouble(manager.Monitor.DownloadSpeed) / 1024.0;
-                            let uploadSpeedInKB = Convert.ToDouble(manager.Monitor.UploadSpeed) / 1024.0;
-                            speedPlot.AddDownloadPerSecPoint(DatePoint(Y=downloadSpeedInKB))
-                            speedPlot.AddUploadPerSecPoint(DatePoint(Y=uploadSpeedInKB))
-                            getTorrentFiles()
-                            updateXmlInfo()
+                let counter = Convert.ToInt32(temp.Tag)
+                if (counter % 2 = 0) then
+                    let downloadSpeedInKB = Convert.ToDouble(manager.Monitor.DownloadSpeed) / 1024.0;
+                    let uploadSpeedInKB = Convert.ToDouble(manager.Monitor.UploadSpeed) / 1024.0;
+                    speedPlot.AddDownloadPerSecPoint(DatePoint(Y=downloadSpeedInKB))
+                    speedPlot.AddUploadPerSecPoint(DatePoint(Y=uploadSpeedInKB))
+                    getTorrentFiles()
+                    updateXmlInfo()
 
-                        temp.Tag <- counter + 1
-                         )
+                temp.Tag <- counter + 1)
         temp
         
     let openInExplorerCommand =

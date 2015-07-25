@@ -47,7 +47,8 @@ open NicoExtensions
         let loadTorrents (paths:PathValues) torrentSettings (list: ResizeArray<TorrentManagerViewModel>) =           
             Directory.GetFiles(paths.InternalPath, "*" + TorrentDownloadInfo.Extension, SearchOption.TopDirectoryOnly) 
             |> Seq.choose (fun xmlFile ->
-                let info :TorrentDownloadInfo = xmlFile |> Utils.fileToString |> Utils.deserialize 
+                let content = xmlFile |> Utils.fileToString 
+                let info = content|> Utils.deserialize<TorrentDownloadInfo>
                 if info.IsValid then Some(info) else None)
             |> Seq.map (fun torrentInfo -> 
                 let torrentMgr =

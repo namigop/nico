@@ -29,11 +29,13 @@ type TorrentDownloadInfo() =
     let filesInfo = ResizeArray<TorrentFileInfo>()
 
     static member Extension = ".tor.xml"
+
     member this.PhysicalTorrentFile 
         with get() = physicalTorrentFile 
         and set v = 
             physicalTorrentFile <- v
-            magnetLink <- ""
+            if not (String.IsNullOrWhiteSpace v) then
+                magnetLink <- ""
 
     member this.Progress with get() = progress and set v = progress <- v
     
@@ -63,7 +65,8 @@ type TorrentDownloadInfo() =
         with get() = magnetLink 
         and set v = 
             magnetLink <- v
-            physicalTorrentFile <- ""
+            if this.IsUsinMagnetLink then
+                physicalTorrentFile <- ""
 
     member this.State with get() = state and set v = state <- v
 
