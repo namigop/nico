@@ -14,26 +14,13 @@ open System.IO
 open System.Collections.ObjectModel
 open System.Diagnostics
 
-type TorrentPriority =
-    | Highest = 0
-    | High = 1
-    | Normal = 2
-    | Low = 3
-    | Lowest = 4
 
-type TorrentFileViewModel(torFile : TorrentFile, downloadPath) =
+type TorrentFileViewModel(torFile : INicoTorrentFile, downloadPath) =
     inherit ViewModelBase()
     let mutable progress = 0.0
-    let mutable fileName = torFile.Path
-
-    let mutable priority =
-        match torFile.Priority with
-        | Priority.High -> TorrentPriority.High
-        | Priority.Highest -> TorrentPriority.Highest
-        | Priority.Low -> TorrentPriority.Low
-        | Priority.Lowest -> TorrentPriority.Lowest
-        | _ -> TorrentPriority.Normal
-
+    let mutable fileName = torFile.FileName
+    let mutable priority = torFile.Priority
+        
     let image = Utils.GetIcon torFile.FullPath
 
     let priorities =
@@ -54,7 +41,7 @@ type TorrentFileViewModel(torFile : TorrentFile, downloadPath) =
 
     member this.OpenInExplorerCommand = openInExplorerCommand
     member this.Image = image
-    member this.UpdateProgress() = this.Progress <- Math.Round(torFile.BitField.PercentComplete, 2)
+    member this.UpdateProgress() = this.Progress <- torFile.Progress
 
     member this.Progress
         with get () = progress
@@ -68,4 +55,4 @@ type TorrentFileViewModel(torFile : TorrentFile, downloadPath) =
         with get () = priority
         and set v = this.RaiseAndSetIfChanged(&priority, v, "Priority")
 
-    member this.SizeInMB = Math.Round(Convert.ToDouble(torFile.Length) / (1024.0 * 1024.0), 2)
+    member this.SizeInMB = torFile.SizeInMB

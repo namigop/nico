@@ -63,7 +63,9 @@
     <Content Include="packages.config" />
     <Compile Include="MagnetLinkParser.fs" />
     <Compile Include="Utils.fs" />
+    <Compile Include="TorrentPriority.fs" />
     <Compile Include="NicoExtension.fs" />
+    <Compile Include="NicoTorrentFile.fs" />
     <Compile Include="DatePoint.fs" />
     <Compile Include="SpeedPlot.fs" />
     <Compile Include="Config.fs" />
@@ -71,10 +73,11 @@
     <Compile Include="RelayCommand.fs" />
     <Compile Include="OverallStatus.fs" />
     <Compile Include="ClientEngineItem.fs" />
-    <Compile Include="TorrentFileViewModel.fs" />
-    <Compile Include="TorrentDownloadInfo.fs" />
-    <Compile Include="TorrentManagerViewModel.fs" />
     <Compile Include="TorrentClient.fs" />
+    <Compile Include="TorrentFileInfo.fs" />
+    <Compile Include="TorrentDownloadInfo.fs" />
+    <Compile Include="TorrentFileViewModel.fs" />
+    <Compile Include="TorrentManagerViewModel.fs" />
     <Resource Include="AddMagnetLinkWindow.xaml" />
     <Compile Include="AddMagnetLinkWindowViewModel.fs" />
     <Resource Include="MainWindow.xaml" />

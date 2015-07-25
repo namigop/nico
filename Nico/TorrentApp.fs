@@ -48,8 +48,7 @@ open NicoExtensions
             Directory.GetFiles(paths.InternalPath, "*" + TorrentDownloadInfo.Extension, SearchOption.TopDirectoryOnly) 
             |> Seq.choose (fun xmlFile ->
                 let info :TorrentDownloadInfo = xmlFile |> Utils.fileToString |> Utils.deserialize 
-                if info.IsValid then Some(info) else None
-                )
+                if info.IsValid then Some(info) else None)
             |> Seq.map (fun torrentInfo -> 
                 let torrentMgr =
                     if torrentInfo.IsUsinMagnetLink then

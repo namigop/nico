@@ -1,4 +1,4 @@
-﻿module NicoExtensions
+﻿module NicoExtensions 
     
     open MonoTorrent
     open MonoTorrent.BEncoding
@@ -11,6 +11,7 @@
     open System
     open System.Windows
     open System.Windows.Media
+    open Nico
 
     type MonoTorrent.InfoHash with
         member this.BEncodedHex() = BEncodedString(this.ToHex())
@@ -21,6 +22,15 @@
     type System.Int64 with
         member this.ToDouble() = Convert.ToDouble(this)
 
+    type Priority with
+        member this.Convert() =
+            match this with
+            | Priority.High -> TorrentPriority.High
+            | Priority.Highest -> TorrentPriority.Highest
+            | Priority.Low -> TorrentPriority.Low
+            | Priority.Lowest -> TorrentPriority.Lowest
+            | _ -> TorrentPriority.Normal
+            
     type DependencyObject with
         member this.FindAncestor<'T when 'T :> DependencyObject>() = 
             let rec findAncestor(elem:DependencyObject) =
@@ -36,16 +46,4 @@
             
             findAncestor(this)
  
-           
-
-//        public static T FindAncestor<T>(this DependencyObject element)
-//    where T : DependencyObject
-//{
-//    // Try get a parent and check for type.
-//    var parent = VisualTreeHelper.GetParent(element);
-//    if (parent is T)
-//    {
-//        return (T)parent;
-//    }
-//    return FindAncestor<T>(parent);
-//}
+            
