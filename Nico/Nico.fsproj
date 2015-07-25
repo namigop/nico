@@ -71,9 +71,9 @@
     <Compile Include="RelayCommand.fs" />
     <Compile Include="OverallStatus.fs" />
     <Compile Include="ClientEngineItem.fs" />
-    <Compile Include="TorrentFileItem.fs" />
+    <Compile Include="TorrentFileViewModel.fs" />
     <Compile Include="TorrentDownloadInfo.fs" />
-    <Compile Include="TorrentManagerItem.fs" />
+    <Compile Include="TorrentManagerViewModel.fs" />
     <Compile Include="TorrentClient.fs" />
     <Resource Include="AddMagnetLinkWindow.xaml" />
     <Compile Include="AddMagnetLinkWindowViewModel.fs" />

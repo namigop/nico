@@ -13,26 +13,26 @@ open MonoTorrent.Dht.Listeners
 open NicoExtensions
  
  type ITorrentApp =
-    abstract Register : TorrentManagerItem -> TorrentManagerItem
+    abstract Register : TorrentManagerViewModel -> TorrentManagerViewModel
     abstract AllTorrentCount : int
-    abstract AllTorrentManagers : (TorrentManagerItem) seq 
-    abstract ActiveTorrentManagers :(TorrentManagerItem) seq
-    abstract SeedingTorrentManagers :(TorrentManagerItem) seq
-    abstract PausedTorrentManagers :(TorrentManagerItem) seq
-    abstract Start : TorrentManagerItem  -> unit
+    abstract AllTorrentManagers : (TorrentManagerViewModel) seq 
+    abstract ActiveTorrentManagers :(TorrentManagerViewModel) seq
+    abstract SeedingTorrentManagers :(TorrentManagerViewModel) seq
+    abstract PausedTorrentManagers :(TorrentManagerViewModel) seq
+    abstract Start : TorrentManagerViewModel  -> unit
     abstract LoadTorrentFiles : (unit) -> unit
     abstract Engine : ClientEngine
-    abstract AddTorrentManager : string -> TorrentManagerItem
-    abstract AddTorrentManagerFromMagnet : string -> TorrentManagerItem
-    abstract Stop : TorrentManagerItem -> unit
-    abstract Pause :TorrentManagerItem -> unit
+    abstract AddTorrentManager : string -> TorrentManagerViewModel
+    abstract AddTorrentManagerFromMagnet : string -> TorrentManagerViewModel
+    abstract Stop : TorrentManagerViewModel -> unit
+    abstract Pause :TorrentManagerViewModel -> unit
 
  module TorrentApp =
     open MonoTorrent
     
     let create port onPeersFound onPieceHashed onTorrentStateChanged onAnnounceComplete =
         
-        let allTorrentManagers = ResizeArray<TorrentManagerItem>()
+        let allTorrentManagers = ResizeArray<TorrentManagerViewModel>()
         let pathValues = Config.getPathValues()
         let allSettings = TorrentClient.setupSettings pathValues.DownloadsPath port
    
@@ -44,7 +44,7 @@ open NicoExtensions
                 info)
             |> Seq.filter (fun info -> info.IsValid)
            
-        let loadTorrents (paths:PathValues) torrentSettings (list: ResizeArray<TorrentManagerItem>) =           
+        let loadTorrents (paths:PathValues) torrentSettings (list: ResizeArray<TorrentManagerViewModel>) =           
             Directory.GetFiles(paths.InternalPath, "*" + TorrentDownloadInfo.Extension, SearchOption.TopDirectoryOnly) 
             |> Seq.choose (fun xmlFile ->
                 let info :TorrentDownloadInfo = xmlFile |> Utils.fileToString |> Utils.deserialize 
@@ -58,7 +58,7 @@ open NicoExtensions
                     else
                         let torrentFile = torrentInfo.PhysicalTorrentFile
                         TorrentClient.createTorrentManager torrentSettings paths torrentFile
-                let mgrItem = TorrentManagerItem(torrentInfo, torrentMgr, pathValues)
+                let mgrItem = TorrentManagerViewModel(torrentInfo, torrentMgr, pathValues)
                 mgrItem)
             |> Seq.iter (fun i -> list.Add i)
 
@@ -71,14 +71,14 @@ open NicoExtensions
                 member x.AddTorrentManager torrentFile = 
                     let mgr = TorrentClient.createTorrentManager allSettings.TorrentDefault pathValues torrentFile
                     let xmlDownloadInfo = TorrentDownloadInfo(PhysicalTorrentFile = torrentFile)
-                    let mgrItem = TorrentManagerItem(xmlDownloadInfo, mgr, pathValues)
+                    let mgrItem = TorrentManagerViewModel(xmlDownloadInfo, mgr, pathValues)
                     allTorrentManagers.Add (mgrItem)
                     mgrItem
                 member x.AddTorrentManagerFromMagnet magnetLinkUrl =
                     let magnetLink = new MagnetLink(magnetLinkUrl)
                     let mgr = TorrentClient.createTorrentManagerFromMagnet allSettings.TorrentDefault pathValues magnetLink
                     let xmlDownloadInfo = TorrentDownloadInfo(MagnetLink = magnetLinkUrl)
-                    let mgrItem = TorrentManagerItem(xmlDownloadInfo, mgr, pathValues)
+                    let mgrItem = TorrentManagerViewModel(xmlDownloadInfo, mgr, pathValues)
                     allTorrentManagers.Add (mgrItem)
                     mgrItem
                 member x.Register mgr = 

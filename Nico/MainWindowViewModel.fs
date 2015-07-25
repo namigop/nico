@@ -43,7 +43,7 @@ type MainWindowViewModel() as this =
     let mutable title = ""
     let pathValues = Config.getPathValues()
     let mutable port = 6746
-    let mutable selectedTorrentManager = Unchecked.defaultof<TorrentManagerItem>
+    let mutable selectedTorrentManager = Unchecked.defaultof<TorrentManagerViewModel>
     let mutable mainViewDisplay = MainViewDisplay.All
 
     let allSettings = TorrentClient.setupSettings pathValues.DownloadsPath port
@@ -57,7 +57,7 @@ type MainWindowViewModel() as this =
             (fun d -> statusMessage <- String.Format("Tracker {0} -> {1} : {2}", d.Tracker.Uri, d.Tracker.Status, DateTime.Now))
 
     let clientEngineItem = ClientEngineItem(torrentApp.Engine)
-    let displayedTorrentManagers = ObservableCollection<TorrentManagerItem>()
+    let displayedTorrentManagers = ObservableCollection<TorrentManagerViewModel>()
 
     let showTorrentManagers mgrs =
         displayedTorrentManagers |> Seq.iter (fun m -> m.StopWatch())
@@ -68,7 +68,8 @@ type MainWindowViewModel() as this =
             if (item.OverallStatus = OverallStatus.Downloading || item.OverallStatus = OverallStatus.Seeding) then
                item.StartWatch()
             else 
-                item.ShowFiles())
+                ()) //TODO
+                //item.ShowFiles())
 
     let refreshTimer =
         let temp = DispatcherTimer()
@@ -189,7 +190,7 @@ type MainWindowViewModel() as this =
                 selectedTorrentManager.StartWatch()
         new RelayCommand((fun c -> Utils.isNotNull(selectedTorrentManager)), onRun)
     
-    let moveTorrent (mgr:TorrentManagerItem) (getTargetPos : int -> int) (afterMove: TorrentManagerItem -> unit) =
+    let moveTorrent (mgr:TorrentManagerViewModel) (getTargetPos : int -> int) (afterMove: TorrentManagerViewModel -> unit) =
         if Utils.isNotNull(mgr) then
             let curPos = displayedTorrentManagers.IndexOf(mgr)
             let targetPos =  getTargetPos curPos

@@ -21,7 +21,7 @@ type TorrentPriority =
     | Low = 3
     | Lowest = 4
 
-type TorrentFileItem(torFile : TorrentFileInfo, downloadPath) =
+type TorrentFileViewModel(torFile : TorrentFile, downloadPath) =
     inherit ViewModelBase()
     let mutable progress = 0.0
     let mutable fileName = torFile.Path

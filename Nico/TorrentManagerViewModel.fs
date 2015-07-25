@@ -18,7 +18,7 @@ open OxyPlot.Series
 open System.IO
 open System.Diagnostics
 
-type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : TorrentManager, paths:PathValues) as this =
+type TorrentManagerViewModel( xmlDownloadInfo :TorrentDownloadInfo, manager : TorrentManager, paths:PathValues) as this =
     inherit ViewModelBase()
     let mutable progress = Convert.ToDouble(xmlDownloadInfo.Progress)
     let mutable peersHeader = "Peers"
@@ -32,7 +32,7 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
     let mutable overallStatus = xmlDownloadInfo.State
     let speedPlot = SpeedPlot.create()
      
-    let torrentFiles =    new ObservableCollection<TorrentFileItem>()
+    let torrentFiles =    new ObservableCollection<TorrentFileViewModel>()
      
     let getTorrentFiles() =
              
@@ -40,7 +40,7 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
             let items = 
                 manager.Torrent.Files 
                 |> Seq.sortBy (fun t -> t.FullPath)
-                |> Seq.map (fun f -> TorrentFileItem(f,paths.DownloadsPath))
+                |> Seq.map (fun f -> TorrentFileViewModel(f,paths.DownloadsPath))
         
             if (Seq.length items) > 0 then
                 torrentFiles.Clear()
