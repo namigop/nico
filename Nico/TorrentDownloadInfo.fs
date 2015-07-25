@@ -16,6 +16,21 @@ open System.IO
 open System.Xml.Serialization
 
 //use concrete class types so that we can serialize/deserialize it
+type TorrentFileInfo(fullpath1, priority1, progress1, sizeInMBytes1) =
+    let mutable fullpath = fullpath1
+    let mutable priority = priority1
+    let mutable progress = progress1
+    let mutable sizeInMBytes = sizeInMBytes1
+
+    new (torItem:TorrentFileItem) = TorrentFileInfo(torItem.FileFullPath, torItem.Priority, torItem.Progress, torItem.SizeInMB)
+    new() = TorrentFileInfo("", TorrentPriority.Normal, 0.0, 0.0)
+
+    member this.FullPath with get() = fullpath and set v = fullpath <- v
+    member this.Priority with get() = priority and set v = priority <- v
+    member this.Progress with get() = progress and set v = progress <- v
+    member this.SizeInMBytes with get() = sizeInMBytes and set v = sizeInMBytes <- v
+
+//use concrete class types so that we can serialize/deserialize it
 type TorrentDownloadInfo() =
     let mutable name = ""
     let mutable bytesDownloaded = 0L
@@ -26,6 +41,7 @@ type TorrentDownloadInfo() =
     let mutable physicalTorrentFile = ""
     let mutable progress = 0
     let mutable magnetLink = ""
+    let filesInfo = ResizeArray<TorrentFileInfo>()
 
     static member Extension = ".tor.xml"
     member this.PhysicalTorrentFile 
@@ -36,8 +52,18 @@ type TorrentDownloadInfo() =
 
     member this.Progress with get() = progress and set v = progress <- v
     
-    member this.Name with get() = Path.GetFileName(this.PhysicalTorrentFile)
+    member this.Name 
+        with get() = 
+            if (this.IsUsinMagnetLink) then
+                let magnetParts = MagnetLinkParser.parse this.MagnetLink
+                match magnetParts.dn with
+                | Some(name) -> name
+                | None -> magnetParts.xt |> Option.get
+            else
+                Path.GetFileName(this.PhysicalTorrentFile)
     
+    member this.Files with get() = filesInfo
+
     member this.BytesDownloaded with get() = bytesDownloaded and set v = bytesDownloaded <- v
 
     member this.BytesUploaded with get() = bytesUploaded and set v = bytesUploaded <- v
@@ -46,6 +72,8 @@ type TorrentDownloadInfo() =
 
     member this.DownloadDuration with get() = downloadDuration and set v = downloadDuration <- v
  
+    member this.IsUsinMagnetLink = not(String.IsNullOrWhiteSpace this.MagnetLink)
+
     member this.MagnetLink 
         with get() = magnetLink 
         and set v = 

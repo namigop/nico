@@ -51,12 +51,17 @@ open NicoExtensions
                 if info.IsValid then Some(info) else None
                 )
             |> Seq.map (fun torrentInfo -> 
-                let torrentFile = torrentInfo.PhysicalTorrentFile
-                let mgr = TorrentClient.createTorrentManager torrentSettings paths torrentFile
-                let mgrItem = TorrentManagerItem(torrentInfo, mgr, pathValues)
+                let torrentMgr =
+                    if torrentInfo.IsUsinMagnetLink then
+                        let magnet = torrentInfo.MagnetLink
+                        TorrentClient.createTorrentManagerFromMagnet torrentSettings paths (MagnetLink(magnet))
+                    else
+                        let torrentFile = torrentInfo.PhysicalTorrentFile
+                        TorrentClient.createTorrentManager torrentSettings paths torrentFile
+                let mgrItem = TorrentManagerItem(torrentInfo, torrentMgr, pathValues)
                 mgrItem)
             |> Seq.iter (fun i -> list.Add i)
-        
+
         let engine = TorrentClient.setupClientEngine port allSettings.EngineSettings      
 
         {

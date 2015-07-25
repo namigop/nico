@@ -64,9 +64,11 @@ type MainWindowViewModel() as this =
         displayedTorrentManagers.Clear()
         mgrs     
         |> Seq.iter(fun item ->
-             displayedTorrentManagers.Add item
-             if (item.OverallStatus = OverallStatus.Downloading || item.OverallStatus = OverallStatus.Seeding) then
-                item.StartWatch())
+            displayedTorrentManagers.Add item
+            if (item.OverallStatus = OverallStatus.Downloading || item.OverallStatus = OverallStatus.Seeding) then
+               item.StartWatch()
+            else 
+                item.ShowFiles())
 
     let refreshTimer =
         let temp = DispatcherTimer()
@@ -104,8 +106,6 @@ type MainWindowViewModel() as this =
             |> torrentApp.AddTorrentManagerFromMagnet             
             |> torrentApp.Register
             |> torrentApp.Start
-            
-            ()
              //showTorrentManagers torrentApp.ActiveTorrentManagers
         new RelayCommand((fun c -> true), onRun)
 

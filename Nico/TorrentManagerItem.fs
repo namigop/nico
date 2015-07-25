@@ -31,11 +31,11 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
     let mutable selectedTabIndex = 0
     let mutable overallStatus = xmlDownloadInfo.State
     let speedPlot = SpeedPlot.create()
-   // let xmlDownloadInfo = TorrentDownloadInfo(PhysicalTorrentFile = physicalTorrentFile)
      
     let torrentFiles =    new ObservableCollection<TorrentFileItem>()
      
     let getTorrentFiles() =
+             
         if (Utils.isNotNull manager.Torrent) && not(manager.Torrent.Files.Length = torrentFiles.Count) then
             let items = 
                 manager.Torrent.Files 
@@ -46,11 +46,15 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
                 torrentFiles.Clear()
                 items |> Seq.iter(fun t -> torrentFiles.Add t)
 
-        
+    let updateFiles() =
+        let filesInfo = torrentFiles |> Seq.map (fun t -> TorrentFileInfo(t))   
+        xmlDownloadInfo.Files.Clear()
+        xmlDownloadInfo.Files.AddRange filesInfo
+
 
     let updateXmlInfo() =
-        System.Diagnostics.Debug.WriteLine("Manager Down : {0} KB" , manager.Monitor.DataBytesDownloaded.ToDouble()/1024.0)
-        System.Diagnostics.Debug.WriteLine("Manager Up : {0} KB" , manager.Monitor.DataBytesUploaded.ToDouble()/1024.0)
+        //System.Diagnostics.Debug.WriteLine("Manager Down : {0} KB" , manager.Monitor.DataBytesDownloaded.ToDouble()/1024.0)
+        //System.Diagnostics.Debug.WriteLine("Manager Up : {0} KB" , manager.Monitor.DataBytesUploaded.ToDouble()/1024.0)
         xmlDownloadInfo.BytesDownloaded <- 
             if xmlDownloadInfo.BytesDownloaded > manager.Monitor.DataBytesDownloaded then
                 xmlDownloadInfo.BytesDownloaded 
@@ -65,6 +69,7 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
             else
                 xmlDownloadInfo.DownloadDuration
         
+        updateFiles()
         xmlDownloadInfo.State <-  this.OverallStatus
         xmlDownloadInfo.Save(paths.InternalPath)
       
@@ -156,16 +161,15 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
     member x.PeersHeader 
         with get () = peersHeader
         and set v = this.RaiseAndSetIfChanged(&peersHeader, v, "PeersHeader")
-   
-    
+
     member x.AllPeers = allPeers
     member x.TorrentFiles = torrentFiles    
     member x.TorrentManager = manager
-    member this.Name = manager.Torrent.Name
-    // member this.Size = size
+    member this.Name =  xmlDownloadInfo.Name
     member this.StartWatch() = 
         if (xmlDownloadInfo.DownloadStartDate > DateTime.Now) then
             xmlDownloadInfo.DownloadStartDate <- DateTime.Now      
+        updateFiles()
         timer.Start()
     member this.StopWatch() = timer.Stop()
 
@@ -176,7 +180,6 @@ type TorrentManagerItem( xmlDownloadInfo :TorrentDownloadInfo, manager : Torrent
     member this.SelectedTabIndex
         with get () = selectedTabIndex
         and set v = this.RaiseAndSetIfChanged(&selectedTabIndex, v, "SelectedTabIndex")
-
 
     member x.SelectDetailsCommand = new RelayCommand((fun d -> true), fun _ -> this.SelectedTabIndex <- 2)
     member x.SelectFilesCommand = new RelayCommand((fun d -> true), fun _ -> this.SelectedTabIndex <- 0)

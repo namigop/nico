@@ -14,13 +14,28 @@ open System.IO
 open System.Collections.ObjectModel
 open System.Diagnostics
 
-type TorrentFileItem(torFile : TorrentFile, downloadPath) =
+type TorrentPriority =
+    | Highest = 0
+    | High = 1
+    | Normal = 2
+    | Low = 3
+    | Lowest = 4
+
+type TorrentFileItem(torFile : TorrentFileInfo, downloadPath) =
     inherit ViewModelBase()
     let mutable progress = 0.0
     let mutable fileName = torFile.Path
-    let mutable priority = torFile.Priority
+
+    let mutable priority =
+        match torFile.Priority with
+        | Priority.High -> TorrentPriority.High
+        | Priority.Highest -> TorrentPriority.Highest
+        | Priority.Low -> TorrentPriority.Low
+        | Priority.Lowest -> TorrentPriority.Lowest
+        | _ -> TorrentPriority.Normal
+
     let image = Utils.GetIcon torFile.FullPath
-      
+
     let priorities =
         let temp = new ObservableCollection<Priority>()
         temp.Add(Priority.Highest)
@@ -39,22 +54,18 @@ type TorrentFileItem(torFile : TorrentFile, downloadPath) =
 
     member this.OpenInExplorerCommand = openInExplorerCommand
     member this.Image = image
-    member this.UpdateProgress() =
-        this.Progress <- Math.Round(torFile.BitField.PercentComplete,2)
+    member this.UpdateProgress() = this.Progress <- Math.Round(torFile.BitField.PercentComplete, 2)
+
     member this.Progress
         with get () = progress
         and set v = this.RaiseAndSetIfChanged(&progress, v, "Progress")
 
     member this.FileName = fileName
     member this.FileFullPath = torFile.FullPath
-
-   
     member this.Priorities = priorities
+
     member this.Priority
         with get () = priority
-        and set v = 
-            this.RaiseAndSetIfChanged(&priority, v, "Priority")
-            torFile.Priority <- v
+        and set v = this.RaiseAndSetIfChanged(&priority, v, "Priority")
 
-    
-    member this.SizeInMB = Math.Round(Convert.ToDouble(torFile.Length)/(1024.0 * 1024.0), 2)
+    member this.SizeInMB = Math.Round(Convert.ToDouble(torFile.Length) / (1024.0 * 1024.0), 2)

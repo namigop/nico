@@ -77,7 +77,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <Rectangle Width="16" Height="16" Fill="Green">
                                     <Rectangle.OpacityMask>
-                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_cloud_add}" />
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_globe_wire}" />
                                     </Rectangle.OpacityMask>
                                 </Rectangle>
                                 <!--<TextBlock Text=" TORRENT" VerticalAlignment="Center" />-->
