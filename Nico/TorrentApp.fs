@@ -114,7 +114,7 @@ open NicoExtensions
                     |> Seq.iter (fun (mgr) ->
                         (x.Register mgr) |> ignore
                         match mgr.TorrentXmlInfo.State with
-                        | OverallStatus.Downloading | OverallStatus.Seeding -> x.Start mgr
+                        | OverallStatus.Downloading | OverallStatus.Seeding | OverallStatus.Initializing -> x.Start mgr
                         | OverallStatus.Paused -> x.Pause mgr
                         | _ -> () )
                     

@@ -276,6 +276,8 @@
                     </Style>
 
                 </Grid.Resources>
+                
+                <!-- Main data grid showing the Torrent downloads -->
                 <DataGrid Grid.Row="1" ItemsSource="{Binding TorrentManagers}" RowStyle="{StaticResource DefaultTorrentManagerItemRowStyle}"
                     Style="{StaticResource AzureDataGrid}"
                   AutoGenerateColumns="False" x:Name="grid" SelectedItem="{Binding SelectedTorrentManager}">
@@ -344,6 +346,13 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Ratio}" HorizontalAlignment="Center" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Comment"  IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Comment}" HorizontalAlignment="Center" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

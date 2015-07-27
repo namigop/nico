@@ -44,9 +44,7 @@ type TorrentManagerViewModel( xmlDownloadInfo :TorrentDownloadInfo, manager : To
         
     let updateFiles() =
         if (Utils.isNotNull manager.Torrent) then
-            if not(String.IsNullOrWhiteSpace(xmlDownloadInfo.PhysicalTorrentFile)) && not (File.Exists xmlDownloadInfo.PhysicalTorrentFile) then
-                ()foomagnet
-            xmlDownloadInfo.PhysicalTorrentFile <- Path.Combine(manager.Torrent.TorrentPath, manager.Torrent.Name)
+            xmlDownloadInfo.PhysicalTorrentFile <- manager.Torrent.TorrentPath
             if not(manager.Torrent.Files.Length = torrentFiles.Count) then
                 let items = 
                     manager.Torrent.Files 
@@ -75,8 +73,12 @@ type TorrentManagerViewModel( xmlDownloadInfo :TorrentDownloadInfo, manager : To
                 xmlDownloadInfo.BytesDownloaded 
             else
                 manager.Monitor.DataBytesDownloaded
-
-        xmlDownloadInfo.BytesUploaded <-  xmlDownloadInfo.BytesUploaded + manager.Monitor.DataBytesUploaded
+        xmlDownloadInfo.BytesUploaded <-
+            if xmlDownloadInfo.BytesUploaded > manager.Monitor.DataBytesUploaded then
+                    xmlDownloadInfo.BytesUploaded 
+                else
+                    manager.Monitor.DataBytesUploaded
+ 
         xmlDownloadInfo.Progress <-Convert.ToInt32(manager.Progress)
         xmlDownloadInfo.DownloadDuration <-
             if xmlDownloadInfo.Progress < 100 then
@@ -176,6 +178,7 @@ type TorrentManagerViewModel( xmlDownloadInfo :TorrentDownloadInfo, manager : To
         with get () = peersHeader
         and set v = this.RaiseAndSetIfChanged(&peersHeader, v, "PeersHeader")
 
+    member x.Comment = manager.Torrent.Comment
     member x.AllPeers = allPeers
     member x.TorrentFiles = torrentFiles    
     member x.TorrentManager = manager
