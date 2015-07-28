@@ -23,6 +23,7 @@ open System.Windows.Controls
 open System.Windows.Media
 open System.Windows.Threading
 open Microsoft.Win32
+open Nico.Cs
 
 type MainWindow = XAML< "MainWindow.xaml", true >
 
@@ -56,6 +57,26 @@ type MainWindowViewModel() as this =
             (fun c -> statusMessage <- String.Format("Torrent state {0} -> {1} : {2}", c.OldState, c.NewState, DateTime.Now))
             (fun d -> statusMessage <- String.Format("Tracker {0} -> {1} : {2}", d.Tracker.Uri, d.Tracker.Status, DateTime.Now))
 
+
+    do  ClipboardNotification.ClipboardUpdate 
+        |> Observable.add (fun arg ->
+            let text = Clipboard.GetText()
+            if not (text  = null) && text.StartsWith("magnet:?") || text.StartsWith("http://") then
+                let svc = UrlMonitorService.create text pathValues 
+                let targetUrl = svc.GetLink()
+                if not (String.IsNullOrWhiteSpace(targetUrl)) then
+                    let vm =
+                        if svc.IsMagnetLink then
+                            torrentApp.AddTorrentManagerFromMagnet targetUrl
+                        else
+                            let file = Path.Combine(pathValues.InternalPath, Guid.NewGuid().ToString() + ".torrent" )
+                            (Utils.downloadTorrent targetUrl file).Wait()
+                            torrentApp.AddTorrentManager file
+
+                    vm
+                    |> torrentApp.Register
+                    |> torrentApp.Start
+            )
     let clientEngineItem = ClientEngineItem(torrentApp.Engine)
     let displayedTorrentManagers = ObservableCollection<TorrentManagerViewModel>()
 
@@ -101,12 +122,12 @@ type MainWindowViewModel() as this =
         this.OnPropertyChanged("SelectedTorrentManager")
 
     let addMagnetLinkCommand =
-        let onRun (arg) =
-            let svc = MagnetLinkService.create ""
-            svc.GetLink()
-            |> torrentApp.AddTorrentManagerFromMagnet             
-            |> torrentApp.Register
-            |> torrentApp.Start
+        let onRun (arg) = ()
+//            let svc = MagnetLinkService.create ""
+//            svc.GetLink()
+//            |> torrentApp.AddTorrentManagerFromMagnet             
+//            |> torrentApp.Register
+//            |> torrentApp.Start
              //showTorrentManagers torrentApp.ActiveTorrentManagers
         new RelayCommand((fun c -> true), onRun)
 

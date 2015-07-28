@@ -9,6 +9,7 @@ open System.Xml.Serialization
 open System.Text
 open System.Xml.Schema
 open System.Xml
+open System.Net
 //open System.DirectoryServices.AccountManagement
 
 open System.Security.Cryptography
@@ -47,6 +48,11 @@ module Utils =
                         icon.Handle, 
                         rect,
                         BitmapSizeOptions.FromEmptyOptions());
+
+
+    let downloadTorrent (httpUrl :string) targetFile= 
+        use client = new WebClient()
+        client.DownloadFileTaskAsync(httpUrl, targetFile)
 
     let isNotNull (item:obj) = not(item = null)
     let fileDeleteForced fileFullPath = 

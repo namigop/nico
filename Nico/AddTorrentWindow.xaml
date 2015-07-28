@@ -10,6 +10,8 @@
     Width="550"
     Height="165"
     WindowStyle="ToolWindow"
+    ShowMaxRestoreButton="False"
+    ShowMinButton="False"
     TextElement.Foreground="{DynamicResource MaterialDesignBody}"
     Background="{DynamicResource MaterialDesignPaper}"
     Style="{DynamicResource CleanWindowStyleKey}"
@@ -17,15 +19,17 @@
   >
 
     <Window.DataContext>
-        <viewmodels:AddMagnetLinkWindowViewModel />
+        <viewmodels:AddTorrentWindowViewModel />
     </Window.DataContext>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-     
-    <Grid Margin="5">
+    <Border BorderBrush="Gray" BorderThickness="1" Margin="2">
+        
+   
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
@@ -61,7 +65,7 @@
         </Button>
 
         <DockPanel Grid.Row="2" Grid.ColumnSpan="3" Margin="0,15,0,0">
-            <Button DockPanel.Dock="Right" Width="60" Margin="5,0,0,0">
+            <Button DockPanel.Dock="Right" Width="60" Margin="5,0,0,0" Command="{Binding CancelCommand}">
                 <StackPanel Orientation="Horizontal">
                     <!--<Rectangle Width="16" Height="16" Fill="Goldenrod">
                         <Rectangle.OpacityMask>
@@ -71,14 +75,14 @@
                     <TextBlock Text="Cancel" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
-            <Button DockPanel.Dock="Right"   Command="{Binding CancelCommand}" Width="60" >
+            <Button DockPanel.Dock="Right"   Command="{Binding OkCommand}" Width="60" >
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="16" Height="16" Fill="LightGreen">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_check}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
-                    <TextBlock Text=" Cancel" VerticalAlignment="Center" />
+                    <TextBlock Text=" OK" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
           
@@ -88,4 +92,5 @@
 
 
     </Grid>
+    </Border>
 </controls:MetroWindow>
