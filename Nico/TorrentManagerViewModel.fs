@@ -61,7 +61,7 @@ type TorrentManagerViewModel( xmlDownloadInfo :TorrentDownloadInfo, manager : To
                     manager.Torrent.Files 
                     |> Seq.fold (fun (acc:Dictionary<string, float>) i -> 
                         let path:string = i.Path
-                        acc.[path] <- 0.0
+                        acc.[path] <- i.BitField.PercentComplete
                         acc ) (Dictionary<string, float>())
                 for f in xmlDownloadInfo.Files do
                     f.Progress <- keyPairs.[Path.GetFileName(f.FullPath)]
