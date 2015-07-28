@@ -3,6 +3,7 @@
 open System
 open System.Net
 open System.IO
+open System.Windows
 open MonoTorrent.BEncoding
 open MonoTorrent.Client
 open MonoTorrent.Client.Encryption
@@ -11,7 +12,8 @@ open MonoTorrent.Common
 open MonoTorrent.Dht
 open MonoTorrent.Dht.Listeners
 open NicoExtensions
- 
+open Nico.Cs
+
  type ITorrentApp =
     abstract Register : TorrentManagerViewModel -> TorrentManagerViewModel
     abstract AllTorrentCount : int
@@ -32,6 +34,13 @@ open NicoExtensions
     
     let create port onPeersFound onPieceHashed onTorrentStateChanged onAnnounceComplete =
         
+       
+        ClipboardNotification.ClipboardUpdate 
+        |> Observable.add (fun arg ->
+            let text = Clipboard.GetText()
+            if not (text  = null) && text.StartsWith("magnet:?") || text.StartsWith("http://") then
+                ()
+            )
         let allTorrentManagers = ResizeArray<TorrentManagerViewModel>()
         let pathValues = Config.getPathValues()
         let allSettings = TorrentClient.setupSettings pathValues.DownloadsPath port

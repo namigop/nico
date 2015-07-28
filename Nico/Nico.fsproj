@@ -79,8 +79,8 @@
     <Compile Include="TorrentDownloadInfo.fs" />
     <Compile Include="TorrentFileViewModel.fs" />
     <Compile Include="TorrentManagerViewModel.fs" />
-    <Resource Include="AddMagnetLinkWindow.xaml" />
-    <Compile Include="AddMagnetLinkWindowViewModel.fs" />
+    <Resource Include="AddTorrentWindow.xaml" />
+    <Compile Include="AddTorrentWindowViewModel.fs" />
     <Resource Include="MainWindow.xaml" />
     <Compile Include="TorrentApp.fs" />
     <Compile Include="MainWindowViewModel.fs" />
@@ -158,6 +158,11 @@
     <ProjectReference Include="..\MahApps.Metro.Resources\MahApps.Metro.Resources.csproj">
       <Name>MahApps.Metro.Resources</Name>
       <Project>{e708ac99-605b-42a0-8d20-abca8fe42dd2}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Nico.Cs\Nico.Cs.csproj">
+      <Name>Nico.Cs</Name>
+      <Project>{bc2b9445-2b46-462e-a678-dd069fdfa98d}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>

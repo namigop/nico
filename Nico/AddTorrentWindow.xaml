@@ -1,0 +1,91 @@
+﻿<controls:MetroWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:viewmodels="clr-namespace:Nico;assembly=Nico"
+    xmlns:views="clr-namespace:Nico"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:oxy="clr-namespace:OxyPlot.Wpf;assembly=OxyPlot.Wpf"
+    Title="Add a torrent"
+    Width="550"
+    Height="165"
+    WindowStyle="ToolWindow"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    Background="{DynamicResource MaterialDesignPaper}"
+    Style="{DynamicResource CleanWindowStyleKey}"
+    GlowBrush="{DynamicResource AccentColorBrush}"
+  >
+
+    <Window.DataContext>
+        <viewmodels:AddMagnetLinkWindowViewModel />
+    </Window.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+     
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="50" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="Url :" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <TextBox Text="{Binding Url}" Grid.Column="1" Margin="10,5,5,5" />
+        <Button  Grid.Column="2"  Margin="10,5,5,5" >
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Width="16" Height="16" Fill="LightBlue">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_globe_wire}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </StackPanel>
+        </Button>
+
+        <TextBlock Text="Download Folder :" Grid.Row="1"  VerticalAlignment="Center"/>
+        <TextBox Text="{Binding DownloadPath}" Grid.Row="1" Grid.Column="1" Margin="10,5,5,5"/>
+        <Button Grid.Row="1" Grid.Column="2"  Margin="10,5,5,5" Command="{Binding SelectFolderCommand}">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Width="16" Height="16" Fill="Goldenrod">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_folder_open}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>               
+            </StackPanel>
+        </Button>
+
+        <DockPanel Grid.Row="2" Grid.ColumnSpan="3" Margin="0,15,0,0">
+            <Button DockPanel.Dock="Right" Width="60" Margin="5,0,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <!--<Rectangle Width="16" Height="16" Fill="Goldenrod">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_folder_open}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>-->
+                    <TextBlock Text="Cancel" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button DockPanel.Dock="Right"   Command="{Binding CancelCommand}" Width="60" >
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="16" Height="16" Fill="LightGreen">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_check}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Text=" Cancel" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+          
+            <TextBlock />
+        </DockPanel>
+      
+
+
+    </Grid>
+</controls:MetroWindow>

@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MonoTorrent", "MonoTorrent"
 		MonoTorrent\MonoTorrent.dll = MonoTorrent\MonoTorrent.dll
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nico.Cs", "Nico.Cs\Nico.Cs.csproj", "{BC2B9445-2B46-462E-A678-DD069FDFA98D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{E708AC99-605B-42A0-8D20-ABCA8FE42DD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E708AC99-605B-42A0-8D20-ABCA8FE42DD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E708AC99-605B-42A0-8D20-ABCA8FE42DD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC2B9445-2B46-462E-A678-DD069FDFA98D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC2B9445-2B46-462E-A678-DD069FDFA98D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC2B9445-2B46-462E-A678-DD069FDFA98D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC2B9445-2B46-462E-A678-DD069FDFA98D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
