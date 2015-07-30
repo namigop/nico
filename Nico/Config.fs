@@ -23,18 +23,19 @@ type PathValues =
     }
 
 module Config =
+ 
+    let private internalPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nico-11-16-2009")
+    let private torrentsPath = Path.Combine(internalPath, "Torrents")
+    let defaultDownloadPath = Path.Combine(internalPath, "Downloads")
 
-    let private basePath = fun () -> Environment.CurrentDirectory
-    let private torrentsPath = Path.Combine(basePath(), "Torrents")
-
-    let rec getPathValues() =
+    let rec getPathValues(downloadPath) =
         {
-            InternalPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nico-11-16-2009")
-            BasePath = basePath()
+            InternalPath = internalPath
+            BasePath = internalPath
             TorrentsPath = torrentsPath
-            DownloadsPath = Path.Combine(basePath(), "Downloads")
+            DownloadsPath = downloadPath
             FastResumeFile = Path.Combine(torrentsPath, "fastresume.data")
-            DhtNodeFile = Path.Combine(basePath(), "DhtNodes")
+            DhtNodeFile = Path.Combine(internalPath, "DhtNodes")
         }
     
     let createPaths (paths:PathValues) =

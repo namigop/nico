@@ -29,16 +29,16 @@ module TorrentClient =
             { 
               EngineSettings = engineSettings
               TorrentDefault = torrentDefaults
-              Paths = Config.getPathValues() 
+              Paths = Config.getPathValues(downloadPath) 
             }
         allSettings
 
-    let setupClientEngine port engineSettings  =
+    let setupClientEngine port engineSettings downloadPath =
         let engine = new ClientEngine(engineSettings)
         engine.ChangeListenEndpoint(new IPEndPoint(IPAddress.Any, port))
         let nodes = 
             try
-                File.ReadAllBytes(Config.getPathValues().DhtNodeFile)
+                File.ReadAllBytes(Config.getPathValues(downloadPath).DhtNodeFile)
                  
             with
             | _ -> Array.zeroCreate 0

@@ -24,8 +24,8 @@ open Nico.Cs
     abstract Start : TorrentManagerViewModel  -> unit
     abstract LoadTorrentFiles : (unit) -> unit
     abstract Engine : ClientEngine
-    abstract AddTorrentManager : string -> TorrentManagerViewModel
-    abstract AddTorrentManagerFromMagnet : string -> TorrentManagerViewModel
+    abstract AddTorrentManager :  PathValues -> string -> TorrentManagerViewModel
+    abstract AddTorrentManagerFromMagnet :  PathValues -> string -> TorrentManagerViewModel
     abstract Stop : TorrentManagerViewModel -> unit
     abstract Pause :TorrentManagerViewModel -> unit
 
@@ -34,11 +34,11 @@ open Nico.Cs
     
     let create port onPeersFound onPieceHashed onTorrentStateChanged onAnnounceComplete =
         let allTorrentManagers = ResizeArray<TorrentManagerViewModel>()
-        let pathValues = Config.getPathValues()
-        let allSettings = TorrentClient.setupSettings pathValues.DownloadsPath port
+        let defaultPathValues = Config.getPathValues(Config.defaultDownloadPath)
+        let allSettings = TorrentClient.setupSettings defaultPathValues.DownloadsPath port
     
         let getValidTorrents() =
-            let files = Directory.GetFiles(pathValues.InternalPath, "*tor.xml")
+            let files = Directory.GetFiles(defaultPathValues.InternalPath, "*tor.xml")
             files 
             |> Seq.map (fun file -> 
                 let info:TorrentDownloadInfo = file|> Utils.fileToString |> Utils.deserialize
@@ -59,23 +59,23 @@ open Nico.Cs
                     else
                         let torrentFile = torrentInfo.PhysicalTorrentFile
                         TorrentClient.createTorrentManager torrentSettings paths torrentFile
-                let mgrItem = TorrentManagerViewModel(torrentInfo, torrentMgr, pathValues)
+                let mgrItem = TorrentManagerViewModel(torrentInfo, torrentMgr, paths)
                 mgrItem)
             |> Seq.iter (fun i -> list.Add i)
 
-        let engine = TorrentClient.setupClientEngine port allSettings.EngineSettings      
+        let engine = TorrentClient.setupClientEngine port allSettings.EngineSettings Config.defaultDownloadPath      
 
         {
             new ITorrentApp with
                 member x.Engine = engine
                 member x.AllTorrentCount = allTorrentManagers.Count
-                member x.AddTorrentManager torrentFile = 
+                member x.AddTorrentManager  pathValues torrentFile = 
                     let mgr = TorrentClient.createTorrentManager allSettings.TorrentDefault pathValues torrentFile
                     let xmlDownloadInfo = TorrentDownloadInfo(PhysicalTorrentFile = torrentFile)
                     let mgrItem = TorrentManagerViewModel(xmlDownloadInfo, mgr, pathValues)
                     allTorrentManagers.Add (mgrItem)
                     mgrItem
-                member x.AddTorrentManagerFromMagnet magnetLinkUrl =
+                member x.AddTorrentManagerFromMagnet  pathValues magnetLinkUrl =
                     let magnetLink = new MagnetLink(magnetLinkUrl)
                     let mgr = TorrentClient.createTorrentManagerFromMagnet allSettings.TorrentDefault pathValues magnetLink
                     let xmlDownloadInfo = TorrentDownloadInfo(MagnetLink = magnetLinkUrl)
@@ -88,7 +88,7 @@ open Nico.Cs
                 member x.AllTorrentManagers = seq { for a in allTorrentManagers do yield a }
                 member x.Start mgr =  
                     TorrentClient.start mgr.TorrentManager
-                    mgr.TorrentXmlInfo.Save(pathValues.InternalPath)
+                    mgr.TorrentXmlInfo.Save(defaultPathValues.InternalPath)
                     mgr.StartWatch()
                      
                 member x.SeedingTorrentManagers = 
@@ -110,7 +110,7 @@ open Nico.Cs
                         | TorrentState.Downloading -> Some (t)
                         | _ -> None) 
                 member x.LoadTorrentFiles()  =
-                    loadTorrents pathValues allSettings.TorrentDefault allTorrentManagers
+                    loadTorrents defaultPathValues allSettings.TorrentDefault allTorrentManagers
                     allTorrentManagers 
                     |> Seq.iter (fun (mgr) ->
                         (x.Register mgr) |> ignore

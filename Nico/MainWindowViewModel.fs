@@ -35,19 +35,19 @@ type MainViewDisplay =
 
 type MainWindowViewModel() as this =
     inherit ViewModelBase()
-    do Config.createPaths (Config.getPathValues())
+    //do Config.createPaths (Config.getPathValues())
     let mutable allTorrentsHeader = "All"
     let mutable seedingTorrentsHeader = "Seeding"
     let mutable pausedTorrentsHeader = "Paused"
     let mutable downloadingTorrentsHeader = "Active"
     let mutable statusMessage = ""
     let mutable title = ""
-    let pathValues = Config.getPathValues()
+    let pathValues = Config.getPathValues(Config.defaultDownloadPath)
     let mutable port = 6746
     let mutable selectedTorrentManager = Unchecked.defaultof<TorrentManagerViewModel>
     let mutable mainViewDisplay = MainViewDisplay.All
 
-    let allSettings = TorrentClient.setupSettings pathValues.DownloadsPath port
+    let allSettings downloadPath = TorrentClient.setupSettings downloadPath port
 
     let torrentApp =
         TorrentApp.create
@@ -61,17 +61,18 @@ type MainWindowViewModel() as this =
     do  ClipboardNotification.ClipboardUpdate 
         |> Observable.add (fun arg ->
             let text = Clipboard.GetText()
-            if not (text  = null) && text.StartsWith("magnet:?") || text.StartsWith("http://") then
-                let svc = UrlMonitorService.create text pathValues 
+            if not (text  = null) && text.StartsWith("magnet:?") || (text.StartsWith("http://") && text.EndsWith(".torrent")) then
+                let svc = UrlMonitorService.create text Config.defaultDownloadPath
                 let targetUrl = svc.GetLink()
-                if not (String.IsNullOrWhiteSpace(targetUrl)) then
+                if svc.IsValidLink then
                     let vm =
                         if svc.IsMagnetLink then
-                            torrentApp.AddTorrentManagerFromMagnet targetUrl
+                            torrentApp.AddTorrentManagerFromMagnet  (Config.getPathValues svc.DownloadPath) targetUrl
                         else
+                            let pathValues = Config.getPathValues svc.DownloadPath
                             let file = Path.Combine(pathValues.InternalPath, Guid.NewGuid().ToString() + ".torrent" )
                             (Utils.downloadTorrent targetUrl file).Wait()
-                            torrentApp.AddTorrentManager file
+                            torrentApp.AddTorrentManager  pathValues file
 
                     vm
                     |> torrentApp.Register
@@ -141,8 +142,8 @@ type MainWindowViewModel() as this =
                 let target = Path.Combine(pathValues.TorrentsPath, fileName)
                 if not (File.Exists target) then
                     File.Copy(torrent, target)
-                    target
-                    |> torrentApp.AddTorrentManager 
+                    target 
+                    |> torrentApp.AddTorrentManager pathValues
                     |> torrentApp.Register
                     |> torrentApp.Start 
 
@@ -160,7 +161,7 @@ type MainWindowViewModel() as this =
                 if not (File.Exists target) then
                     File.Copy(torrent, target)
                     target
-                    |> torrentApp.AddTorrentManager 
+                    |> torrentApp.AddTorrentManager pathValues
                     |> torrentApp.Register
                     |> torrentApp.Start 
                 showTorrentManagers torrentApp.ActiveTorrentManagers
