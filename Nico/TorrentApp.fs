@@ -71,14 +71,14 @@ open Nico.Cs
                 member x.AllTorrentCount = allTorrentManagers.Count
                 member x.AddTorrentManager  pathValues torrentFile = 
                     let mgr = TorrentClient.createTorrentManager allSettings.TorrentDefault pathValues torrentFile
-                    let xmlDownloadInfo = TorrentDownloadInfo(PhysicalTorrentFile = torrentFile)
+                    let xmlDownloadInfo = TorrentDownloadInfo(PhysicalTorrentFile = torrentFile, Name=mgr.Torrent.Name)
                     let mgrItem = TorrentManagerViewModel(xmlDownloadInfo, mgr, pathValues)
                     allTorrentManagers.Add (mgrItem)
                     mgrItem
                 member x.AddTorrentManagerFromMagnet  pathValues magnetLinkUrl =
                     let magnetLink = new MagnetLink(magnetLinkUrl)
-                    let mgr = TorrentClient.createTorrentManagerFromMagnet allSettings.TorrentDefault pathValues magnetLink
-                    let xmlDownloadInfo = TorrentDownloadInfo(MagnetLink = magnetLinkUrl)
+                    let mgr = TorrentClient.createTorrentManagerFromMagnet allSettings.TorrentDefault pathValues magnetLink                    
+                    let xmlDownloadInfo = TorrentDownloadInfo(MagnetLink = magnetLinkUrl, Name= magnetLink.Name)
                     let mgrItem = TorrentManagerViewModel(xmlDownloadInfo, mgr, pathValues)
                     allTorrentManagers.Add (mgrItem)
                     mgrItem

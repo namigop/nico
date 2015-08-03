@@ -89,8 +89,17 @@ type TorrentManagerViewModel( xmlDownloadInfo :TorrentDownloadInfo, manager : To
         updateFiles()
         xmlDownloadInfo.State <-  this.OverallStatus
         xmlDownloadInfo.Save(paths.InternalPath)
-      
-    let updateDownloadStat() =
+//      
+//    let getName() =
+//        if (this.IsUsinMagnetLink) then
+//            let magnetParts = MagnetLinkParser.parse this.MagnetLink
+//            match magnetParts.dn with
+//            | Some(name) -> name
+//            | None -> magnetParts.xt |> Option.get
+//        else
+//            Path.GetFileName(this.PhysicalTorrentFile)
+
+    let updateDownloadStat() =      
         this.Progress <-
             let curProgress = Math.Round(manager.Progress, 2)
             if curProgress < this.Progress then this.Progress else curProgress

@@ -26,6 +26,8 @@ type TorrentDownloadInfo() =
     let mutable physicalTorrentFile = ""
     let mutable progress = 0
     let mutable magnetLink = ""
+    let mutable name = ""
+
     let filesInfo = ResizeArray<TorrentFileInfo>()
 
     static member Extension = ".tor.xml"
@@ -40,14 +42,17 @@ type TorrentDownloadInfo() =
     member this.Progress with get() = progress and set v = progress <- v
     
     member this.Name 
-        with get() = 
-            if (this.IsUsinMagnetLink) then
-                let magnetParts = MagnetLinkParser.parse this.MagnetLink
-                match magnetParts.dn with
-                | Some(name) -> name
-                | None -> magnetParts.xt |> Option.get
-            else
-                Path.GetFileName(this.PhysicalTorrentFile)
+        with get() = name
+        and set v = name <- v
+
+//        with get() = 
+//            if (this.IsUsinMagnetLink) then
+//                let magnetParts = MagnetLinkParser.parse this.MagnetLink
+//                match magnetParts.dn with
+//                | Some(name) -> name
+//                | None -> magnetParts.xt |> Option.get
+//            else
+//                Path.GetFileName(this.PhysicalTorrentFile)
     
     member this.Files with get() = filesInfo
 
