@@ -42,7 +42,12 @@ type MainWindowViewModel() as this =
     let mutable downloadingTorrentsHeader = "Active"
     let mutable statusMessage = ""
     let mutable title = ""
-    let pathValues = Config.getPathValues(Config.defaultDownloadPath)
+    let pathValues = 
+        let v = Config.getPathValues(Config.defaultDownloadPath)
+        if not(Directory.Exists(v.TorrentsPath)) then
+            (Directory.CreateDirectory v.TorrentsPath) |> ignore
+        v
+
     let mutable port = 6746
     let mutable selectedTorrentManager = Unchecked.defaultof<TorrentManagerViewModel>
     let mutable mainViewDisplay = MainViewDisplay.All

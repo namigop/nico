@@ -78,10 +78,12 @@ type TorrentDownloadInfo() =
     member this.Ratio = Math.Round(Convert.ToDouble(this.BytesUploaded)/Convert.ToDouble(this.BytesDownloaded), 3)
 
     member this.IsValid = 
-        if (String.IsNullOrWhiteSpace(magnetLink)) then
-            File.Exists(this.PhysicalTorrentFile) && File.OpenRead(this.PhysicalTorrentFile).Length > 0L  
-        else
-            magnetLink.StartsWith("magnet")
+        let isValidlink = 
+            if (String.IsNullOrWhiteSpace(magnetLink)) then
+                File.Exists(this.PhysicalTorrentFile) && File.OpenRead(this.PhysicalTorrentFile).Length > 0L  
+            else
+                magnetLink.StartsWith("magnet")
+        this.Files.Count > 0 && isValidlink
     
     member this.Save(internalPath:string) =
         if not (Directory.Exists(internalPath)) then

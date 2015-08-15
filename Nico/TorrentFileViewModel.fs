@@ -41,7 +41,7 @@ type TorrentFileViewModel(torFile : INicoTorrentFile, downloadPath) =
 
     member this.OpenInExplorerCommand = openInExplorerCommand
     member this.Image = image
-    member this.UpdateProgress() = this.Progress <- torFile.Progress
+    member this.UpdateProgress() = this.Progress <- Math.Round(torFile.Progress,2)
 
     member this.Progress
         with get () = progress
